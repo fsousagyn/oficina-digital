@@ -1,0 +1,61 @@
+.header {
+  position: fixed;
+  top: 0;
+  width: 100%;
+  background-color: #fff;
+  border-bottom: 1px solid #ddd;
+  z-index: 1000;
+  font-family: 'Poppins', sans-serif;
+}
+
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 1rem 2rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.logo {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.logo img {
+  height: 50px;
+}
+
+.logo h1 {
+  margin: 0;
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: #333;
+}
+
+.logo span {
+  font-size: 0.75rem;
+  color: #777;
+  display: block;
+}
+
+.nav a {
+  margin: 0 0.5rem;
+  text-decoration: none;
+  color: #333;
+  font-weight: 500;
+}
+
+.acesso button {
+  background-color: #13814f;
+  color: white;
+  border: none;
+  padding: 0.5rem 1rem;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+.acesso button:hover {
+  background-color: #0e613a;
+}
