@@ -9,18 +9,18 @@ function Header() {
         <div className="logo">
           <img src="/imagens/logo-ef.png" alt="Logo EF Criativa" />
           <div>
-            <h1>EF Madeira e Metal</h1>
-            <span>MarcenarIA & SerralherIA CrIAtiva</span>
+            <h1>EF CrIAtiva</h1>
+            <span>MarcenarIA & SerralherIA </span>
           </div>
         </div>
 
         {/* Navegação */}
         <nav className="nav">
-          <a href="#quem-somos">Quem Somos</a>
-          <a href="#clientes">Clientes</a>
-          <a href="#contato">Contato</a>
-          <a href="#como-comprar">Como Comprar</a>
-        </nav>
+  <Link to="/quem-somos">Quem Somos</Link>
+  <Link to="/clientes">Clientes</Link>
+  <Link to="/contato">Contato</Link>
+  <Link to="/como-comprar">Como Comprar</Link>
+</nav>
 
         {/* Botão Acessar */}
         <div className="acesso">

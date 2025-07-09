@@ -1,0 +1,23 @@
+.footer {
+  background-color: #f4f4f4;
+  padding: 2rem 1rem;
+  text-align: center;
+  font-family: 'Poppins', sans-serif;
+  border-top: 1px solid #ccc;
+}
+
+.footer-content p {
+  margin: 0.5rem 0;
+  color: #555;
+}
+
+.redes a {
+  margin: 0 0.5rem;
+  text-decoration: none;
+  color: #13814f;
+  font-weight: 500;
+}
+
+.redes a:hover {
+  text-decoration: underline;
+}
