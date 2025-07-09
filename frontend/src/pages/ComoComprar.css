@@ -1,43 +1,43 @@
-/* Área principal */
-#page-como-comprar {
-  max-width: 900px;
+/* Área principal da página */
+.tela {
+  max-width: 960px;
   margin: 4rem auto;
   padding: 2rem;
-  font-family: 'Poppins', sans-serif;
-  background-color: #fcfcfc;
+  background-color: #fdfaf5; /* fundo amadeirado claro */
   color: #2e2e2e;
+  font-family: 'Poppins', sans-serif;
   border-radius: 12px;
-  box-shadow: 0 2px 16px rgba(0, 0, 0, 0.05);
+  box-shadow: 0 2px 16px rgba(0,0,0,0.05);
+  min-height: calc(100vh - 80px); /* ajusta com altura do header */
 }
 
 /* Título */
-#page-como-comprar h1 {
-  font-size: 2.4rem;
-  font-weight: 600;
+.tela h1, .tela h2 {
   text-align: center;
-  color: #13814f;
+  color: #4b3621; /* madeira escura */
+  font-size: 2rem;
   margin-bottom: 2.5rem;
 }
 
-/* Fieldset */
+/* Fieldsets */
 fieldset {
   border: none;
-  border-bottom: 1px solid #e3e3e3;
-  margin-bottom: 2rem;
   padding-bottom: 1rem;
+  margin-bottom: 2rem;
+  border-bottom: 1px solid #e3e3e3;
 }
 
 legend {
   font-weight: 600;
   font-size: 1.2rem;
-  color: #13814f;
+  color: #4b3621;
   margin-bottom: 1rem;
 }
 
-/* Labels e inputs */
+/* Labels e campos */
 label {
   display: block;
-  margin-top: 1.2rem;
+  margin-top: 1rem;
   font-weight: 500;
   color: #333;
 }
@@ -52,8 +52,14 @@ textarea {
   border: 1px solid #ccc;
   border-radius: 6px;
   background-color: #fff;
-  box-sizing: border-box;
+  color: #2e2e2e; /* texto visível em selects/options */
   transition: border 0.2s ease;
+  box-sizing: border-box;
+}
+
+select option {
+  background-color: #fff;
+  color: #2e2e2e;
 }
 
 input:focus,
@@ -81,7 +87,7 @@ textarea:focus {
   border-radius: 6px;
   font-weight: 600;
   cursor: pointer;
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+  box-shadow: 0 2px 6px rgba(0,0,0,0.05);
   transition: background-color 0.3s ease, transform 0.2s ease;
 }
 
@@ -90,19 +96,19 @@ textarea:focus {
   transform: scale(1.03);
 }
 
-/* Ocultar seções específicas */
+/* Ocultação dinâmica */
 .oculto {
   display: none;
 }
 
-/* Responsivo */
+/* Responsividade */
 @media (max-width: 600px) {
-  #page-como-comprar {
+  .tela {
     padding: 1.5rem;
   }
 
-  #page-como-comprar h1 {
-    font-size: 1.8rem;
+  .tela h1 {
+    font-size: 1.6rem;
   }
 
   .botoes {

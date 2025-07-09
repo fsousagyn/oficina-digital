@@ -7,7 +7,7 @@ function Home() {
     <>
       
       <main style={{ paddingTop: '100px', fontFamily: 'Poppins, sans-serif', textAlign: 'center' }}>
-        <Galeria />
+        
 <section style={{ marginTop: '2rem' }}>
           <h2>Bem-vindo à EF Criativa!</h2>
           <p>Essa é sua página inicial em construção. Em breve, teremos vídeos e clientes por aqui ✨</p>
@@ -20,7 +20,7 @@ function Home() {
             para criar projetos únicos que refletem a alma e a inteligência digital.
           </p>
         </section>
-
+<Galeria />
         
       </main>
       <Footer />
