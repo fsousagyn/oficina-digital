@@ -1,4 +1,5 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
+import './ComoComprar.css';
 
 function ComoComprar() {
   const [tipoProduto, setTipoProduto] = useState('');
@@ -23,13 +24,13 @@ function ComoComprar() {
         <fieldset>
           <legend>Cliente</legend>
           <label htmlFor="nome">Nome:</label>
-          <input type="text" id="nome" name="nome" required />
+          <input type="text" id="nome" required />
 
           <label htmlFor="email">Email:</label>
-          <input type="email" id="email" name="email" required />
+          <input type="email" id="email" required />
 
           <label htmlFor="mensagem">Mensagem:</label>
-          <textarea id="mensagem" name="mensagem" required></textarea>
+          <textarea id="mensagem" required></textarea>
         </fieldset>
 
         <fieldset>

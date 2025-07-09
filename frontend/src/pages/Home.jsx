@@ -5,7 +5,7 @@ import Footer from '../components/Footer';
 function Home() {
   return (
     <>
-      <Header />
+      
       <main style={{ paddingTop: '100px', fontFamily: 'Poppins, sans-serif', textAlign: 'center' }}>
         <Galeria />
 <section style={{ marginTop: '2rem' }}>
