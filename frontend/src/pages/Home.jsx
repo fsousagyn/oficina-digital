@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import './Home.css';
-
+import Footer from '../components/Footer'; // ajuste o caminho conforme sua estrutura
 function Home() {
   const [imagens, setImagens] = useState([
     '/imagens/projeto1.jpg',
@@ -9,7 +9,6 @@ function Home() {
   ]);
   const [indexAtual, setIndexAtual] = useState(0);
 
-  // Simulação de login administrativo
   const isLoggedIn = false;
 
   const avancar = () => {
@@ -64,6 +63,37 @@ function Home() {
           Seu navegador não suporta vídeos.
         </video>
       </div>
+
+      {/* Quem Somos */}
+      <div className="quem-somos">
+        <h3>Quem Somos</h3>
+        <p>
+          A EF Criativa nasceu da paixão por transformar ideias em soluções reais. Com foco em design funcional e acabamento artesanal, oferecemos produtos personalizados para ambientes residenciais, comerciais e pet.
+        </p>
+      </div>
+
+      {/* Parceiros */}
+      <div className="parceiros">
+        <h3>Parceiros</h3>
+        <div className="parceiros-grupo">
+          <div className="parceiros-cliente">
+            <h4>Clientes</h4>
+            <div className="logos">
+              <img src="/imagens/cliente1.png" alt="Cliente 1" />
+              <img src="/imagens/cliente2.jpeg" alt="Cliente 2" />
+              <img src="/imagens/cliente2.png" alt="Cliente 2" />
+            </div>
+          </div>
+          <div className="parceiros-fornecedor">
+            <h4>Fornecedores</h4>
+            <div className="logos">
+              <img src="/imagens/fornecedor1.jpeg" alt="Fornecedor 1" />
+              <img src="/imagens/fornecedor2.png" alt="Fornecedor 2" />
+            </div>
+          </div>
+        </div>
+      </div>
+      <Footer />
     </section>
   );
 }
