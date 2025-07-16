@@ -3,6 +3,7 @@ import Home from './pages/Home';
 import ComoComprar from './pages/ComoComprar';
 import Login from './pages/Login';
 import Header from './components/Header'; // Ajuste o caminho conforme a pasta
+import Footer from './components/Footer';
 function App() {
   return (
     <>
