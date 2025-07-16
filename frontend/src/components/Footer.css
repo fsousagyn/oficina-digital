@@ -1,23 +1,26 @@
 .footer {
-  background-color: #f4f4f4;
-  padding: 2rem 1rem;
+  margin-top: 4rem;
+  padding: 1rem;
   text-align: center;
-  font-family: 'Poppins', sans-serif;
-  border-top: 1px solid #ccc;
+  background-color: #d2b48c;
+  color: #4b3621;
+  font-size: 0.9rem;
+  border-radius: 8px;
 }
 
-.footer-content p {
-  margin: 0.5rem 0;
-  color: #555;
+.social-icons {
+  margin-top: 0.5rem;
+  display: flex;
+  justify-content: center;
+  gap: 1rem;
 }
 
-.redes a {
-  margin: 0 0.5rem;
-  text-decoration: none;
-  color: #13814f;
-  font-weight: 500;
+.social-icons img {
+  height: 24px;
+  width: 24px;
+  transition: transform 0.3s ease;
 }
 
-.redes a:hover {
-  text-decoration: underline;
+.social-icons img:hover {
+  transform: scale(1.2);
 }

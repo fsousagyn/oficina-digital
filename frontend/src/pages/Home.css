@@ -164,6 +164,19 @@
   height: 60px;
   object-fit: contain;
 }
+.parceiros-grupo .logos img {
+  height: 60px;
+  object-fit: contain;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  cursor: pointer;
+  border-radius: 4px;
+  display: inline-block;
+}
+
+.parceiros-grupo .logos img:hover {
+  transform: scale(1.2);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+}
 
 /* Rodapé */
 .footer {
@@ -199,10 +212,6 @@
 
   .quem-somos p {
     font-size: 0.9rem;
-  }
-
-  .logos img {
-    height: 40px;
   }
 
   .footer {
