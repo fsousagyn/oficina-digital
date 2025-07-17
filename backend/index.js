@@ -2,10 +2,11 @@ const express = require('express');
 const mysql = require('mysql2');
 const cors = require('cors');
 const bcrypt = require('bcrypt'); // se quiser usar senha criptografada
-
+const clientesRouter = require('./routes/clientes');
 const app = express();
 app.use(cors());
 app.use(express.json());
+app.use('/api/clientes', clientesRouter);
 console.log('Iniciando servidor...');
 // Conexão com MySQL
 const db = mysql.createConnection({

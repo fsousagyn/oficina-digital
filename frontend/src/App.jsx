@@ -5,7 +5,7 @@ import ComoComprar from './pages/ComoComprar';
 import Header from './components/Header';
 import Footer from './components/Footer';
 import { AuthProvider } from './context/AuthContext';
-
+import RotaProtegida from './components/RotaProtegida';
 function App() {
   return (
     <AuthProvider>

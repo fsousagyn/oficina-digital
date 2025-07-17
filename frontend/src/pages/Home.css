@@ -217,5 +217,39 @@
   .footer {
     font-size: 0.8rem;
   }
+  .mensagem-feedback {
+  margin: 1rem 0;
+  color: #4b3621;
+  font-weight: bold;
+  font-size: 1rem;
+}
+
+.carrossel-item {
+  position: relative;
+  display: inline-block;
+}
+
+.carrossel-item img {
+  max-width: 100%;
+  height: auto;
+  border-radius: 8px;
+}
+
+.btn-excluir {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  background-color: #c0392b;
+  color: white;
+  border: none;
+  border-radius: 50%;
+  padding: 0.4rem;
+  cursor: pointer;
+  font-size: 1rem;
+}
+
+.btn-excluir:hover {
+  background-color: #e74c3c;
+}
 }
 

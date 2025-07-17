@@ -43,9 +43,27 @@
   color: #3a2a19;
 }
 .usuario-logado {
-  color: #4b3621;
-  font-size: 1rem;
+  display: flex;
+  align-items: center;
   margin-left: auto;
   padding-right: 1rem;
   font-family: 'Poppins', sans-serif;
+  color: #4b3621;
+  font-size: 1rem;
+}
+
+.btn-sair {
+  margin-left: 1rem;
+  padding: 0.4rem 0.8rem;
+  background-color: #4b3621;
+  color: #fff;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 0.9rem;
+  transition: background-color 0.3s ease;
+}
+
+.btn-sair:hover {
+  background-color: #6b4e2e;
 }

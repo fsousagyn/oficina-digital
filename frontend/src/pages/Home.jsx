@@ -1,16 +1,32 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import './Home.css';
 import Footer from '../components/Footer';
 import { useAuth } from '../context/AuthContext';
 
 function Home() {
-  const { usuario } = useAuth(); // ✅ verifica login
-  const [imagens, setImagens] = useState([
-    '/imagens/projeto1.jpg',
-    '/imagens/projeto2.jpg',
-    '/imagens/projeto3.jpg',
-  ]);
+  const { usuario } = useAuth();
+  const [imagens, setImagens] = useState([]);
   const [indexAtual, setIndexAtual] = useState(0);
+  const [mensagem, setMensagem] = useState('');
+
+  // Carregar imagens salvas no localStorage
+  useEffect(() => {
+    const salvas = localStorage.getItem('carrosselEF');
+    if (salvas) {
+      setImagens(JSON.parse(salvas));
+    } else {
+      setImagens([
+        '/imagens/projeto1.jpg',
+        '/imagens/projeto2.jpg',
+        '/imagens/projeto3.jpg',
+      ]);
+    }
+  }, []);
+
+  // Limpar mensagem ao deslogar
+  useEffect(() => {
+    setMensagem('');
+  }, [usuario]);
 
   const avancar = () => {
     if (imagens.length === 0) return;
@@ -23,15 +39,35 @@ function Home() {
   };
 
   const adicionarImagem = () => {
-    const file = document.getElementById('nova-imagem').files[0];
+    const input = document.getElementById('nova-imagem');
+    const file = input.files[0];
     if (!file) return;
 
     const reader = new FileReader();
     reader.onload = function (event) {
-      setImagens((prev) => [...prev, event.target.result]);
-      setIndexAtual((prev) => prev + 1);
+      const novaImagem = event.target.result;
+
+      if (imagens.includes(novaImagem)) {
+        setMensagem('⚠️ Esta imagem já foi adicionada.');
+        return;
+      }
+
+      const atualizadas = [...imagens, novaImagem];
+      setImagens(atualizadas);
+      localStorage.setItem('carrosselEF', JSON.stringify(atualizadas));
+      setIndexAtual(atualizadas.length - 1);
+      setMensagem('✅ Imagem adicionada com sucesso!');
+      input.value = '';
     };
     reader.readAsDataURL(file);
+  };
+
+  const excluirImagem = (index) => {
+    const novaLista = imagens.filter((_, i) => i !== index);
+    setImagens(novaLista);
+    localStorage.setItem('carrosselEF', JSON.stringify(novaLista));
+    setIndexAtual((prev) => Math.max(0, prev - (index <= prev ? 1 : 0)));
+    setMensagem('🗑️ Imagem removida com sucesso!');
   };
 
   return (
@@ -42,10 +78,20 @@ function Home() {
       <div className="carrossel">
         <button className="carrossel-btn" onClick={voltar}>❮</button>
         <div className="carrossel-imagens">
-          <img src={imagens[indexAtual]} alt={`Foto ${indexAtual + 1}`} />
+          {imagens.length > 0 && (
+            <div className="carrossel-item">
+              <img src={imagens[indexAtual]} alt={`Foto ${indexAtual + 1}`} />
+              {usuario && (
+                <button className="btn-excluir" onClick={() => excluirImagem(indexAtual)}>🗑️</button>
+              )}
+            </div>
+          )}
         </div>
         <button className="carrossel-btn" onClick={avancar}>❯</button>
       </div>
+
+      {/* Mensagem de feedback */}
+      {mensagem && <p className="mensagem-feedback">{mensagem}</p>}
 
       {/* Upload de imagem (somente se logado) */}
       {usuario && (

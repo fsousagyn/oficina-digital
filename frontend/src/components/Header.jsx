@@ -1,10 +1,12 @@
 import { Link } from 'react-router-dom';
 import './Header.css';
 import { useAuth } from '../context/AuthContext';
+import { useCliente } from '../context/ClienteContext';
 
 function Header() {
-  const { usuario } = useAuth(); // ✅ hook dentro da função
-  console.log('Usuário no Header:', usuario);
+  const { usuario, logout } = useAuth();
+  const { cliente, logoutCliente } = useCliente();
+
   return (
     <header className="header">
       <div className="logo-area">
@@ -18,12 +20,20 @@ function Header() {
       <nav className="nav">
         <Link to="/" className="nav-link">Início</Link>
         <Link to="/como-comprar" className="nav-link">Como Comprar</Link>
-        <Link to="/login" className="nav-link">Login</Link>
+        {!usuario && !cliente && (
+          <Link to="/login" className="nav-link">Login</Link>
+        )}
       </nav>
 
-      {usuario && (
+      {(usuario || cliente) && (
         <div className="usuario-logado">
-          Olá, <strong>{usuario.nome}</strong>
+          Olá, <strong>{usuario?.nome || cliente?.nome}</strong>
+          <button
+            className="btn-sair"
+            onClick={usuario ? logout : logoutCliente}
+          >
+            Sair
+          </button>
         </div>
       )}
     </header>
