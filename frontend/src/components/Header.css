@@ -42,3 +42,10 @@
 .nav-link:hover {
   color: #3a2a19;
 }
+.usuario-logado {
+  color: #4b3621;
+  font-size: 1rem;
+  margin-left: auto;
+  padding-right: 1rem;
+  font-family: 'Poppins', sans-serif;
+}

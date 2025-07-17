@@ -1,8 +1,36 @@
-// Ponto de entrada do servidor 
 const express = require('express');
+const mysql = require('mysql2');
+const cors = require('cors');
+const bcrypt = require('bcrypt'); // se quiser usar senha criptografada
+
 const app = express();
-const PORT = process.env.PORT || 3001;
+app.use(cors());
+app.use(express.json());
+console.log('Iniciando servidor...');
+// Conexão com MySQL
+const db = mysql.createConnection({
+  host: 'localhost',
+  user: 'root',
+  password: 'Ef@2025*IA',
+  database: 'oficina_digital'
+});
 
-app.get('/', (req, res) => res.send('Servidor backend está ativo!'));
+// Rota de login
+app.post('/login', (req, res) => {
+  const { email, senha } = req.body;
 
-app.listen(PORT, () => console.log(`🚀 Backend rodando na porta ${PORT}`));
+  db.query('SELECT * FROM usuarios WHERE email = ?', [email], (err, results) => {
+    if (err) return res.status(500).json({ erro: 'Erro no servidor' });
+    if (results.length === 0) return res.status(401).json({ erro: 'Usuário não encontrado' });
+
+    const usuario = results[0];
+    if (senha === usuario.senha) {
+      res.json({ sucesso: true, usuario });
+    } else {
+      res.status(401).json({ erro: 'Senha incorreta' });
+    }
+  });
+});
+   app.listen(3001, () => {
+  console.log('Servidor rodando na porta 3001');
+});

@@ -1,15 +1,16 @@
 import { useState } from 'react';
 import './Home.css';
-import Footer from '../components/Footer'; // ajuste o caminho conforme sua estrutura
+import Footer from '../components/Footer';
+import { useAuth } from '../context/AuthContext';
+
 function Home() {
+  const { usuario } = useAuth(); // ✅ verifica login
   const [imagens, setImagens] = useState([
     '/imagens/projeto1.jpg',
     '/imagens/projeto2.jpg',
     '/imagens/projeto3.jpg',
   ]);
   const [indexAtual, setIndexAtual] = useState(0);
-
-  const isLoggedIn = false;
 
   const avancar = () => {
     if (imagens.length === 0) return;
@@ -28,7 +29,7 @@ function Home() {
     const reader = new FileReader();
     reader.onload = function (event) {
       setImagens((prev) => [...prev, event.target.result]);
-      setIndexAtual(prev => prev + 1);
+      setIndexAtual((prev) => prev + 1);
     };
     reader.readAsDataURL(file);
   };
@@ -47,7 +48,7 @@ function Home() {
       </div>
 
       {/* Upload de imagem (somente se logado) */}
-      {isLoggedIn && (
+      {usuario && (
         <div className="upload-carrossel">
           <label htmlFor="nova-imagem">Adicionar nova imagem ao carrossel:</label>
           <input type="file" id="nova-imagem" accept="image/*" />
@@ -93,6 +94,7 @@ function Home() {
           </div>
         </div>
       </div>
+
       <Footer />
     </section>
   );
