@@ -45,7 +45,34 @@ function ComoComprar() {
       setMensagem('Login inválido. Verifique seus dados.');
     }
   };
+const handleSalvarOrcamento = async () => {
+  const tipo_solicitacao = tipoProduto;
+  const mensagem = document.getElementById('mensagem').value;
 
+  const dados = {
+    tipoProjeto: document.getElementById('tipo-projeto')?.value,
+    estrutura: document.getElementById('estrutura')?.value,
+    altura: document.getElementById('altura')?.value,
+    largura: document.getElementById('largura')?.value,
+    profundidade: document.getElementById('profundidade')?.value,
+    acabamentoMadeira: Array.from(document.getElementById('acabamento-madeira')?.selectedOptions || []).map(opt => opt.value),
+    acabamentoMetal: Array.from(document.getElementById('acabamento-metal')?.selectedOptions || []).map(opt => opt.value),
+    embalagem: document.getElementById('embalagem')?.value,
+    observacoes: document.getElementById('observacoes')?.value,
+  };
+
+  try {
+    await axios.post('/api/orcamentos', {
+      cliente_email: cliente.email,
+      tipo_solicitacao,
+      mensagem,
+      dados,
+    });
+    alert('Orçamento salvo com sucesso!');
+  } catch (erro) {
+    alert('Erro ao salvar orçamento.');
+  }
+};
   const handleLogout = () => {
     logoutCliente();
   };
@@ -229,6 +256,7 @@ function ComoComprar() {
             <div className="botoes">
               <button type="button" id="visualizar">Visualizar</button>
               <button type="button" id="refazer">Refazer</button>
+              <button type="button" onClick={handleSalvarOrcamento}>Salvar Orçamento</button>
             </div>
           </form>
         </>

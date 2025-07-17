@@ -4,9 +4,11 @@ const cors = require('cors');
 const bcrypt = require('bcrypt'); // se quiser usar senha criptografada
 const clientesRouter = require('./routes/clientes');
 const app = express();
+const orcamentosRouter = require('./routes/orcamentos');
 app.use(cors());
 app.use(express.json());
 app.use('/api/clientes', clientesRouter);
+app.use('/api/orcamentos', orcamentosRouter);
 console.log('Iniciando servidor...');
 // Conexão com MySQL
 const db = mysql.createConnection({
