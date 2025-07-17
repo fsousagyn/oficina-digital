@@ -2,6 +2,8 @@ import { useState, useEffect } from 'react';
 import './ComoComprar.css';
 import { useCliente } from '../context/ClienteContext';
 import axios from 'axios';
+import jsPDF from 'jspdf';
+import html2canvas from 'html2canvas';
 
 function ComoComprar() {
   const { cliente, loginCliente, logoutCliente } = useCliente();
@@ -35,7 +37,38 @@ function ComoComprar() {
       setMensagem('Erro ao cadastrar. Tente outro e-mail.');
     }
   };
+const gerarPDF = () => {
+  const doc = new jsPDF();
 
+  doc.setFontSize(14);
+  doc.text(`Orçamento - EF Criativa`, 10, 10);
+  doc.text(`Cliente: ${cliente.nome}`, 10, 20);
+  doc.text(`Email: ${cliente.email}`, 10, 30);
+  doc.text(`Mensagem: ${document.getElementById('mensagem')?.value || ''}`, 10, 40);
+  doc.text(`Tipo de solicitação: ${tipoProduto}`, 10, 50);
+
+  doc.text(`Dados técnicos:`, 10, 60);
+  doc.text(`Altura: ${document.getElementById('altura')?.value || ''} cm`, 10, 70);
+  doc.text(`Largura: ${document.getElementById('largura')?.value || ''} cm`, 10, 80);
+  doc.text(`Profundidade: ${document.getElementById('profundidade')?.value || ''} cm`, 10, 90);
+
+  doc.save('orcamento.pdf');
+};
+const gerarImagem = () => {
+  const form = document.getElementById('form-como-comprar');
+  html2canvas(form).then(canvas => {
+    const link = document.createElement('a');
+    link.download = 'orcamento.png';
+    link.href = canvas.toDataURL();
+    link.click();
+  });
+};
+
+const enviarWhatsApp = () => {
+  const texto = `Olá! Aqui está meu orçamento:\n\nCliente: ${cliente.nome}\nEmail: ${cliente.email}\nMensagem: ${document.getElementById('mensagem')?.value || ''}`;
+  const url = `https://wa.me/?text=${encodeURIComponent(texto)}`;
+  window.open(url, '_blank');
+};
   const handleLogin = async () => {
     try {
       const resposta = await axios.post('/api/clientes/login', { email, senha });
@@ -257,6 +290,9 @@ const handleSalvarOrcamento = async () => {
               <button type="button" id="visualizar">Visualizar</button>
               <button type="button" id="refazer">Refazer</button>
               <button type="button" onClick={handleSalvarOrcamento}>Salvar Orçamento</button>
+              <button type="button" onClick={gerarPDF}>Gerar PDF</button>
+              <button type="button" onClick={gerarImagem}>Salvar como imagem</button>
+              <button type="button" onClick={enviarWhatsApp}>Enviar via WhatsApp</button>
             </div>
           </form>
         </>
