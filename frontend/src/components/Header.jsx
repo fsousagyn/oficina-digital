@@ -7,6 +7,8 @@ function Header() {
   const { usuario, logout } = useAuth();
   const { cliente, logoutCliente } = useCliente();
 
+  const nomeExibido = usuario?.nome || cliente?.nome;
+
   return (
     <header className="header">
       <div className="logo-area">
@@ -20,6 +22,11 @@ function Header() {
       <nav className="nav">
         <Link to="/" className="nav-link">Início</Link>
         <Link to="/como-comprar" className="nav-link">Como Comprar</Link>
+
+        {usuario && (
+          <Link to="/admin" className="nav-link">Painel</Link>
+        )}
+
         {!usuario && !cliente && (
           <Link to="/login" className="nav-link">Login</Link>
         )}
@@ -27,7 +34,7 @@ function Header() {
 
       {(usuario || cliente) && (
         <div className="usuario-logado">
-          Olá, <strong>{usuario?.nome || cliente?.nome}</strong>
+          Olá, <strong>{nomeExibido}</strong>
           <button
             className="btn-sair"
             onClick={usuario ? logout : logoutCliente}

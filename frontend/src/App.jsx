@@ -1,3 +1,4 @@
+import PainelAdmin from './components/PainelAdmin'; // ou './components/PainelAdmin' dependendo de onde está
 import { Routes, Route } from 'react-router-dom';
 import Login from './pages/Login';
 import Home from './pages/Home';
@@ -15,6 +16,14 @@ function App() {
           <Route path="/" element={<Home />} />
           <Route path="/como-comprar" element={<ComoComprar />} />
           <Route path="/login" element={<Login />} />
+          <Route
+  path="/admin"
+  element={
+    <RotaProtegida>
+      <PainelAdmin />
+    </RotaProtegida>
+  }
+/>
         </Routes>
          </>
     </AuthProvider>

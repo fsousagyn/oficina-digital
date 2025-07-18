@@ -1,0 +1,110 @@
+.cadastro-produto,
+.lista-produtos {
+  background-color: #fdf6ec;
+  border: 1px solid #d2b48c;
+  padding: 1.5rem;
+  margin: 2rem auto;
+  max-width: 800px;
+  border-radius: 8px;
+  font-family: 'Segoe UI', sans-serif;
+  color: #4b3621;
+}
+
+.cadastro-produto h2,
+.lista-produtos h2 {
+  color: #4b3621;
+  margin-bottom: 1rem;
+}
+
+.cadastro-produto label,
+.lista-produtos label {
+  display: block;
+  margin-top: 1rem;
+  font-weight: bold;
+}
+
+.cadastro-produto input,
+.cadastro-produto select,
+.cadastro-produto textarea {
+  width: 100%;
+  padding: 0.5rem;
+  margin-top: 0.3rem;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+
+.cadastro-produto button,
+.lista-produtos button {
+  background-color: #d2b48c;
+  color: #4b3621;
+  border: none;
+  padding: 0.5rem 1rem;
+  margin-top: 1rem;
+  cursor: pointer;
+  border-radius: 4px;
+}
+
+.cadastro-produto button:hover,
+.lista-produtos button:hover {
+  background-color: #c0a070;
+}
+
+.mensagem-feedback {
+  margin-top: 1rem;
+  color: #a94442;
+  font-weight: bold;
+}
+
+.lista-produtos table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 1rem;
+}
+
+.lista-produtos th,
+.lista-produtos td {
+  border: 1px solid #d2b48c;
+  padding: 0.5rem;
+  text-align: left;
+}
+
+.lista-produtos th {
+  background-color: #d2b48c;
+  color: #fff;
+}
+.painel-admin {
+  font-family: 'Segoe UI', sans-serif;
+  color: #4b3621;
+  background-color: #fdf6ec;
+  min-height: 100vh;
+}
+
+.painel-header {
+  background-color: #d2b48c;
+  padding: 1rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.painel-header h1 {
+  margin: 0;
+  font-size: 1.5rem;
+}
+
+.painel-header nav button {
+  margin-left: 1rem;
+  background: none;
+  border: none;
+  color: #4b3621;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+.painel-header nav button:hover {
+  text-decoration: underline;
+}
+
+.painel-conteudo {
+  padding: 2rem;
+}

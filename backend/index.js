@@ -5,10 +5,14 @@ const bcrypt = require('bcrypt'); // se quiser usar senha criptografada
 const clientesRouter = require('./routes/clientes');
 const app = express();
 const orcamentosRouter = require('./routes/orcamentos');
+const produtosRouter = require('./routes/produtosRoutes');
+const uploadRouter = require('./routes/uploadRoutes');
 app.use(cors());
 app.use(express.json());
 app.use('/api/clientes', clientesRouter);
 app.use('/api/orcamentos', orcamentosRouter);
+app.use('/api/produtos', produtosRouter);
+app.use('/api/upload', uploadRouter);
 console.log('Iniciando servidor...');
 // Conexão com MySQL
 const db = mysql.createConnection({

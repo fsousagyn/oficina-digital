@@ -1,0 +1,34 @@
+.orcamentos-admin {
+  padding: 2rem;
+  font-family: 'Segoe UI', sans-serif;
+  color: #4b3621;
+}
+
+.filtros button {
+  margin-right: 1rem;
+  background-color: #d2b48c;
+  border: none;
+  padding: 0.5rem 1rem;
+  cursor: pointer;
+  border-radius: 4px;
+}
+
+.orcamento-card {
+  border: 1px solid #d2b48c;
+  padding: 1rem;
+  margin-top: 1rem;
+  border-radius: 6px;
+  background-color: #fdf6ec;
+}
+.personalizacao-card {
+  background-color: #fdf6ec;
+  border: 1px solid #d2b48c;
+  padding: 1rem;
+  border-radius: 6px;
+}
+
+.personalizacao-card input[type="number"],
+.personalizacao-card input[type="range"] {
+  margin-bottom: 0.5rem;
+  width: 100%;
+}
