@@ -1,64 +1,124 @@
-.header {
-  background-color: #d2b48c; /* tom amadeirado claro */
+/* Header.css */
+
+/* 🧱 Estrutura geral */
+.header-ef {
   display: flex;
+  flex-wrap: wrap;
   align-items: center;
   justify-content: space-between;
+  background-color: #f8f0e3;
   padding: 1rem 2rem;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
-  position: sticky;
-  top: 0;
-  z-index: 100;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  font-family: 'Poppins', sans-serif;
 }
 
+/* 🖼️ Área do logo e título */
 .logo-area {
   display: flex;
   align-items: center;
+  gap: 1rem;
 }
 
-.logo-area img {
-  height: 48px;
-  margin-right: 0.75rem;
+.logo-img {
+  height: 50px;
+  object-fit: contain;
+  transition: transform 0.3s ease, opacity 0.3s ease;
 }
 
-.logo-area h1 {
-  font-size: 1.5rem;
-  color: #4b3621; /* madeira escura */
+.logo-img:hover {
+  transform: scale(1.08);
+  opacity: 0.9;
+}
+
+.titulo-container h1 {
+  font-size: 1.8rem;
+  font-weight: bold;
+  color: #4b3621;
   margin: 0;
 }
 
+.titulo-container .subtitulo {
+  font-size: 1rem;
+  color: #7a5c3a;
+}
+
+.destaque-ia,
+.destaque-ia1 {
+  color: #e08e00;
+  font-weight: bold;
+}
+
+/* 🔗 Navegação */
 .nav {
   display: flex;
-  gap: 1.5rem;
+  gap: 1rem;
+  flex-wrap: wrap;
 }
 
 .nav-link {
-  margin-left: 1rem;
-  color: #4b3621;
-  font-weight: bold;
-  text-decoration: none;
-}
-
-.nav-link:hover {
-  text-decoration: underline;
-}
-
-.usuario-logado {
-  margin-left: auto;
   display: flex;
   align-items: center;
   gap: 0.5rem;
-  font-weight: bold;
   color: #4b3621;
+  text-decoration: none;
+  font-size: 1rem;
+  padding: 0.4rem 0.8rem;
+  border-radius: 4px;
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+.nav-link:hover {
+  background-color: #e6d6c1;
+  color: #8b5c2d;
+}
+
+.nav-icon {
+  font-size: 1.2rem;
+  transition: transform 0.3s ease, color 0.3s ease;
+}
+
+.nav-link:hover .nav-icon {
+  transform: scale(1.2);
+  color: #8b5c2d;
+}
+
+/* 👤 Usuário logado */
+.usuario-logado {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  color: #4b3621;
+  font-size: 1rem;
 }
 
 .btn-sair {
-  background: none;
+  background-color: #c94949;
+  color: white;
   border: none;
-  color: #4b3621;
+  padding: 0.4rem 0.8rem;
+  border-radius: 4px;
   cursor: pointer;
-  font-weight: bold;
+  transition: background-color 0.3s;
 }
 
 .btn-sair:hover {
-  text-decoration: underline;
+  background-color: #a83838;
+}
+
+/* 📱 Responsividade */
+@media (max-width: 768px) {
+  .header-ef {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .nav {
+    flex-direction: column;
+    gap: 0.5rem;
+    margin-top: 1rem;
+  }
+
+  .usuario-logado {
+    margin-top: 1rem;
+  }
 }

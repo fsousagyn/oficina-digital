@@ -1,4 +1,4 @@
-/* Área principal da tela */
+/* 🧱 Área principal da tela */
 .tela {
   width: 100vw;
   margin: 0;
@@ -8,10 +8,10 @@
   color: #2e2e2e;
   min-height: calc(100vh - 80px);
   box-sizing: border-box;
-  display: block; /* ❗️ Removido flex para evitar centralização forçada */
+  display: block;
 }
 
-/* Título */
+/* 🏷️ Título */
 .tela h2 {
   text-align: center;
   font-size: 2rem;
@@ -19,7 +19,7 @@
   margin-bottom: 2rem;
 }
 
-/* Carrossel */
+/* 🎞️ Carrossel */
 .carrossel {
   position: relative;
   overflow: hidden;
@@ -45,7 +45,18 @@
   border-radius: 8px;
 }
 
-/* Botões do carrossel */
+.carrossel-item {
+  position: relative;
+  display: inline-block;
+}
+
+.carrossel-item img {
+  max-width: 100%;
+  height: auto;
+  border-radius: 8px;
+}
+
+/* 🔘 Botões do carrossel */
 .carrossel-btn {
   position: absolute;
   top: 50%;
@@ -72,7 +83,7 @@
   right: 10px;
 }
 
-/* Upload de imagem */
+/* 🖼️ Upload de imagem */
 .upload-carrossel {
   margin-top: 1rem;
   padding: 1rem;
@@ -81,10 +92,33 @@
   border-radius: 8px;
 }
 
-/* Vídeo institucional */
+/* 🗑️ Botão de excluir imagem */
+.btn-excluir {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  background-color: #c0392b;
+  color: white;
+  border: none;
+  border-radius: 50%;
+  padding: 0.4rem;
+  cursor: pointer;
+  font-size: 1rem;
+}
+
+.btn-excluir:hover {
+  background-color: #e74c3c;
+}
+
+/* 🎬 Vídeo institucional */
 .video-institucional {
   margin-top: 3rem;
   text-align: center;
+  transition: transform 0.3s ease-in-out;
+}
+
+.video-institucional:hover {
+  transform: scale(1.05);
 }
 
 .video-institucional h3 {
@@ -100,26 +134,7 @@
   box-shadow: 0 2px 12px rgba(0, 0, 0, 0.1);
 }
 
-/* Quem Somos */
-.quem-somos {
-  margin-top: 3rem;
-  padding: 1rem;
-  background-color: #f5e9dc;
-  border-radius: 8px;
-}
-
-.quem-somos h3 {
-  color: #4b3621;
-  font-size: 1.6rem;
-  margin-bottom: 0.5rem;
-}
-
-.quem-somos p {
-  font-size: 1rem;
-  line-height: 1.6;
-}
-
-/* Parceiros */
+/* 🤝 Parceiros */
 .parceiros {
   margin-top: 3rem;
 }
@@ -138,7 +153,8 @@
   justify-content: center;
 }
 
-.parceiros-cliente, .parceiros-fornecedor {
+.parceiros-cliente,
+.parceiros-fornecedor {
   flex: 1;
   min-width: 280px;
   background-color: #f5e9dc;
@@ -163,22 +179,66 @@
 .logos img {
   height: 60px;
   object-fit: contain;
-}
-.parceiros-grupo .logos img {
-  height: 60px;
-  object-fit: contain;
+  border-radius: 4px;
   transition: transform 0.3s ease, box-shadow 0.3s ease;
   cursor: pointer;
-  border-radius: 4px;
-  display: inline-block;
 }
 
-.parceiros-grupo .logos img:hover {
+.logos img:hover {
   transform: scale(1.2);
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
 }
 
-/* Rodapé */
+/* 📩 Feedback */
+.mensagem-feedback {
+  margin: 1rem 0;
+  color: #4b3621;
+  font-weight: bold;
+  font-size: 1rem;
+  text-align: justify;
+}
+
+/* 🧾 Seção Institucional */
+.institucional {
+  display: flex;
+  justify-content: center;
+  gap: 2rem;
+  margin-top: 2rem;
+  flex-wrap: wrap;
+  text-align: justify;
+}
+
+.card {
+  flex: 1 1 300px;
+  background-color: #fff8f0;
+  border-radius: 12px;
+  padding: 1.5rem;
+  box-shadow: 0 0 10px rgba(0,0,0,0.1);
+  text-align: justify;
+  transition: transform 0.3s ease-in-out;
+}
+
+.card:hover {
+  transform: scale(1.05); /* Zoom leve */
+}
+
+.card h3 {
+  margin-top: 1rem;
+  color: #4b3621;
+}
+
+.card p {
+  font-size: 0.95rem;
+  color: #333;
+  line-height: 1.5;
+}
+
+.icon {
+  font-size: 2rem;
+  color: #4b3621;
+}
+
+/* 📦 Rodapé */
 .footer {
   margin-top: 4rem;
   padding: 1rem;
@@ -189,7 +249,7 @@
   border-radius: 8px;
 }
 
-/* Responsivo */
+/* 📱 Responsivo */
 @media (max-width: 600px) {
   .carrossel {
     height: 200px;
@@ -205,51 +265,11 @@
   }
 
   .video-institucional h3,
-  .quem-somos h3,
   .parceiros h3 {
     font-size: 1.2rem;
-  }
-
-  .quem-somos p {
-    font-size: 0.9rem;
   }
 
   .footer {
     font-size: 0.8rem;
   }
-  .mensagem-feedback {
-  margin: 1rem 0;
-  color: #4b3621;
-  font-weight: bold;
-  font-size: 1rem;
 }
-
-.carrossel-item {
-  position: relative;
-  display: inline-block;
-}
-
-.carrossel-item img {
-  max-width: 100%;
-  height: auto;
-  border-radius: 8px;
-}
-
-.btn-excluir {
-  position: absolute;
-  top: 8px;
-  right: 8px;
-  background-color: #c0392b;
-  color: white;
-  border: none;
-  border-radius: 50%;
-  padding: 0.4rem;
-  cursor: pointer;
-  font-size: 1rem;
-}
-
-.btn-excluir:hover {
-  background-color: #e74c3c;
-}
-}
-

@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import './Home.css';
 import Footer from '../components/Footer';
 import { useAuth } from '../context/AuthContext';
+import { FaCogs, FaLightbulb, FaEye } from 'react-icons/fa'; // Ícones do React Icons
 
 function Home() {
   const { usuario } = useAuth();
@@ -111,15 +112,35 @@ function Home() {
         </video>
       </div>
 
-      {/* Quem Somos */}
-      <div className="quem-somos">
-        <h3>Quem Somos</h3>
-        <p>
-          A EF Criativa nasceu da paixão por transformar ideias em soluções reais. Com foco em design funcional e acabamento artesanal, oferecemos produtos personalizados para ambientes residenciais, comerciais e pet.
-        </p>
+
+     {/* Seção Institucional */}
+      <div className="institucional">
+        <div className="card">
+          <FaCogs className="icon" />
+          <h3>Quem Somos</h3>
+          <p>
+            A EF Criativa une o melhor da tradição artesanal com a inovação digital. Com raízes na marcenaria e serralheria, evoluímos para integrar inteligência e design em soluções sob medida. Cada projeto nasce da sensibilidade estética, da precisão técnica e do desejo de transformar espaços em experiências únicas.
+          </p>
+        </div>
+
+        <div className="card">
+          <FaLightbulb className="icon" />
+          <h3>Missão</h3>
+          <p>
+            Projetar e entregar soluções personalizadas que combinam arte e função, utilizando processos eficientes e tecnologia inteligente. Buscamos atender com excelência, respeitando os sonhos de cada cliente e valorizando o cuidado em cada detalhe.
+          </p>
+        </div>
+
+        <div className="card">
+          <FaEye className="icon" />
+          <h3>Visão</h3>
+          <p>
+            Ser reconhecida como referência nacional em design autoral com propósito — onde o feito à mão encontra o digital. Acreditamos na força da originalidade, da confiança e da inovação contínua para transformar ambientes e gerar impacto positivo.
+          </p>
+        </div>
       </div>
 
-      {/* Parceiros */}
+          {/* Parceiros */}
       <div className="parceiros">
         <h3>Parceiros</h3>
         <div className="parceiros-grupo">

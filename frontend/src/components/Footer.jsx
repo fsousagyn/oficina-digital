@@ -3,8 +3,8 @@ import './Footer.css';
 function Footer() {
   return (
     <footer className="footer">
-      <p>© 2025 EF Criativa. Todos os direitos reservados.</p>
-      <p>Contato: contato@efcriativa.com.br | (62) 99620-4767</p>
+      <p>EF CrIAtiva – Marcenaria e Serralheria com Tecnologia e Alma</p>
+      <p> Tradição artesanal + inteligência digital = projetos únicos</p>
       <div className="social-icons">
         <a href="https://www.instagram.com/efcriativa" target="_blank" rel="noopener noreferrer">
           <img src="/imagens/instagram.png" alt="Instagram" />
@@ -19,6 +19,8 @@ function Footer() {
           <img src="/imagens/whatsapp.png" alt="WhatsApp" />
         </a>
       </div>
+      <p>Contato: contato@efcriativa.com.br | (62) 99620-4767</p>
+      <p>© 2025 EF Criativa. Todos os direitos reservados.</p>
     </footer>
   );
 }
