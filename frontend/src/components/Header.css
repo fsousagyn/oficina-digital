@@ -122,3 +122,78 @@
     margin-top: 1rem;
   }
 }
+/* 🎯 Dropdown personalizado */
+.dropdown {
+  position: relative;
+  display: inline-block;
+}
+
+.dropdown-toggle {
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0.4rem 0.8rem;
+  font-size: 1rem;
+  color: #4b3621;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  border-radius: 4px;
+  position: relative; /* Mantém o botão como base */
+  z-index: 2;
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+.dropdown-toggle:hover {
+  background-color: #e6d6c1;
+  color: #8b5c2d;
+}
+
+.dropdown-content {
+  margin-top: -1px; /* ou -4px se ainda houver espaço visual */
+  position: absolute;
+  top: 100%;
+  left: 0;
+  background-color: #fff;
+  min-width: 200px;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.15);
+  z-index: 1000;
+  border-radius: 4px;
+  flex-direction: column;
+  display: none; /* controlado via clique */
+}
+
+.dropdown-content a {
+  color: #4b3621;
+  padding: 0.6rem 1rem;
+  text-decoration: none;
+  font-size: 0.95rem;
+  transition: background-color 0.2s ease;
+}
+
+.dropdown-content a:hover {
+  background-color: #f2e5d4;
+  color: #8b5c2d;
+}
+
+/* 🧠 Exibe o menu ao passar o mouse */
+.dropdown:hover .dropdown-content {
+  display: flex;
+}
+
+/* 🪐 Mobile fix */
+@media (max-width: 768px) {
+  .dropdown-content {
+    position: static;
+    box-shadow: none;
+    background-color: transparent;
+  }
+
+  .dropdown-content a {
+    padding-left: 1.5rem;
+  }
+
+  .dropdown:hover .dropdown-content {
+    display: flex;
+  }
+}

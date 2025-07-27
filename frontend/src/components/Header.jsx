@@ -3,12 +3,26 @@ import './Header.css';
 import { useAuth } from '../context/AuthContext';
 import { useCliente } from '../context/ClienteContext';
 import { FaHome, FaShoppingCart, FaUserLock, FaClipboardList } from 'react-icons/fa';
+import { useState, useEffect } from 'react';
 
 function Header() {
   const { usuario, logout } = useAuth();
   const { cliente, logoutCliente } = useCliente();
-
   const nomeExibido = usuario?.nome || cliente?.nome;
+
+  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+
+  // Fecha o dropdown ao clicar fora
+  useEffect(() => {
+    function handleClickOutside(e) {
+      const dropdown = document.getElementById('dropdown-como-comprar');
+      if (dropdown && !dropdown.contains(e.target)) {
+        setIsDropdownOpen(false);
+      }
+    }
+    document.addEventListener('click', handleClickOutside);
+    return () => document.removeEventListener('click', handleClickOutside);
+  }, []);
 
   return (
     <header className="header-ef">
@@ -34,10 +48,31 @@ function Header() {
           <FaHome className="nav-icon" />
           Início
         </Link>
-        <Link to="/como-comprar" className="nav-link">
-          <FaShoppingCart className="nav-icon" />
-          Como Comprar
-        </Link>
+
+        {/* Dropdown Como Comprar com clique */}
+        <div className="dropdown" id="dropdown-como-comprar">
+          <button
+            className={`nav-link dropdown-toggle ${isDropdownOpen ? 'ativo' : ''}`}
+            onClick={() => setIsDropdownOpen(!isDropdownOpen)}
+          >
+            <FaShoppingCart className="nav-icon" />
+            Como Comprar ▾
+          </button>
+          {isDropdownOpen && (
+            <div className="dropdown-content">
+              <a
+                href="https://loja.infinitepay.io/efcriativa"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                Produto Padrão
+              </a>
+              <Link to="/como-comprar?modo=personalizar">Personalizar</Link>
+              <Link to="/como-comprar?modo=novo">Novo Projeto</Link>
+            </div>
+          )}
+        </div>
+
         {usuario && (
           <Link to="/admin" className="nav-link">
             <FaClipboardList className="nav-icon" />

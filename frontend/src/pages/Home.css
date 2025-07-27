@@ -36,6 +36,7 @@
   height: 100%;
   display: flex;
   justify-content: center;
+  transition: transform 0.5s ease-in-out;
 }
 
 .carrossel-imagens img {
@@ -81,6 +82,29 @@
 
 .carrossel-btn:last-of-type {
   right: 10px;
+}
+
+/* 🔘 Indicadores visuais do carrossel */
+.indicadores {
+  position: absolute;
+  bottom: 10px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  gap: 8px;
+  z-index: 5;
+}
+
+.indicador {
+  width: 10px;
+  height: 10px;
+  background-color: #d2b48c;
+  border-radius: 50%;
+  transition: background-color 0.3s ease;
+}
+
+.indicador.ativo {
+  background-color: #4b3621;
 }
 
 /* 🖼️ Upload de imagem */
@@ -253,6 +277,7 @@
 @media (max-width: 600px) {
   .carrossel {
     height: 200px;
+    border-radius: 4px;
   }
 
   .carrossel-btn {
@@ -271,5 +296,10 @@
 
   .footer {
     font-size: 0.8rem;
+  }
+
+  .indicador {
+    width: 8px;
+    height: 8px;
   }
 }

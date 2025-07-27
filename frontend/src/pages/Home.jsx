@@ -1,58 +1,99 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import './Home.css';
 import Footer from '../components/Footer';
 import { useAuth } from '../context/AuthContext';
-import { FaCogs, FaLightbulb, FaEye } from 'react-icons/fa'; // Ícones do React Icons
+import { FaCogs, FaLightbulb, FaEye } from 'react-icons/fa';
 
 function Home() {
   const { usuario } = useAuth();
   const [imagens, setImagens] = useState([]);
   const [indexAtual, setIndexAtual] = useState(0);
   const [mensagem, setMensagem] = useState('');
+  const carrosselRef = useRef(null);
 
-  // Carregar imagens salvas no localStorage
+  // Carregar imagens do localStorage ou padrão
   useEffect(() => {
     const salvas = localStorage.getItem('carrosselEF');
-    if (salvas) {
-      setImagens(JSON.parse(salvas));
-    } else {
-      setImagens([
-        '/imagens/projeto1.jpg',
-        '/imagens/projeto2.jpg',
-        '/imagens/projeto3.jpg',
-      ]);
-    }
+    setImagens(salvas ? JSON.parse(salvas) : [
+      '/imagens/projeto1.jpg',
+      '/imagens/projeto2.jpg',
+      '/imagens/projeto3.jpg',
+    ]);
   }, []);
 
-  // Limpar mensagem ao deslogar
+  // Limpar mensagem ao trocar usuário
   useEffect(() => {
     setMensagem('');
   }, [usuario]);
 
+  // Loop automático
+  useEffect(() => {
+    const intervalo = setInterval(() => {
+      setIndexAtual((prev) => (prev + 1) % imagens.length);
+    }, 5000); // 5 segundos
+    return () => clearInterval(intervalo);
+  }, [imagens]);
+
+  // Swipe por toque
+  useEffect(() => {
+    const carrossel = carrosselRef.current;
+    if (!carrossel) return;
+
+    let startX = 0;
+    let isDragging = false;
+
+    const handleTouchStart = (e) => {
+      startX = e.touches[0].clientX;
+      isDragging = true;
+    };
+    const handleTouchMove = (e) => {
+      if (!isDragging) return;
+      const currentX = e.touches[0].clientX;
+      const diff = currentX - startX;
+      if (Math.abs(diff) > 50) {
+        setIndexAtual((prev) => (diff > 0
+          ? (prev - 1 + imagens.length) % imagens.length
+          : (prev + 1) % imagens.length));
+        isDragging = false;
+      }
+    };
+    const handleTouchEnd = () => { isDragging = false };
+
+    carrossel.addEventListener('touchstart', handleTouchStart);
+    carrossel.addEventListener('touchmove', handleTouchMove);
+    carrossel.addEventListener('touchend', handleTouchEnd);
+
+    return () => {
+      carrossel.removeEventListener('touchstart', handleTouchStart);
+      carrossel.removeEventListener('touchmove', handleTouchMove);
+      carrossel.removeEventListener('touchend', handleTouchEnd);
+    };
+  }, [imagens]);
+
   const avancar = () => {
-    if (imagens.length === 0) return;
-    setIndexAtual((prev) => (prev + 1) % imagens.length);
+    if (imagens.length > 0) {
+      setIndexAtual((prev) => (prev + 1) % imagens.length);
+    }
   };
 
   const voltar = () => {
-    if (imagens.length === 0) return;
-    setIndexAtual((prev) => (prev - 1 + imagens.length) % imagens.length);
+    if (imagens.length > 0) {
+      setIndexAtual((prev) => (prev - 1 + imagens.length) % imagens.length);
+    }
   };
 
   const adicionarImagem = () => {
     const input = document.getElementById('nova-imagem');
-    const file = input.files[0];
+    const file = input?.files[0];
     if (!file) return;
 
     const reader = new FileReader();
-    reader.onload = function (event) {
+    reader.onload = (event) => {
       const novaImagem = event.target.result;
-
       if (imagens.includes(novaImagem)) {
         setMensagem('⚠️ Esta imagem já foi adicionada.');
         return;
       }
-
       const atualizadas = [...imagens, novaImagem];
       setImagens(atualizadas);
       localStorage.setItem('carrosselEF', JSON.stringify(atualizadas));
@@ -76,7 +117,7 @@ function Home() {
       <h2>Bem-vindo à EF Criativa</h2>
 
       {/* Carrossel */}
-      <div className="carrossel">
+      <div className="carrossel" ref={carrosselRef}>
         <button className="carrossel-btn" onClick={voltar}>❮</button>
         <div className="carrossel-imagens">
           {imagens.length > 0 && (
@@ -89,12 +130,19 @@ function Home() {
           )}
         </div>
         <button className="carrossel-btn" onClick={avancar}>❯</button>
+        {/* Indicadores visuais */}
+        <div className="indicadores">
+          {imagens.map((_, i) => (
+            <span
+              key={i}
+              className={`indicador ${i === indexAtual ? 'ativo' : ''}`}
+            />
+          ))}
+        </div>
       </div>
 
-      {/* Mensagem de feedback */}
       {mensagem && <p className="mensagem-feedback">{mensagem}</p>}
 
-      {/* Upload de imagem (somente se logado) */}
       {usuario && (
         <div className="upload-carrossel">
           <label htmlFor="nova-imagem">Adicionar nova imagem ao carrossel:</label>
@@ -112,35 +160,24 @@ function Home() {
         </video>
       </div>
 
-
-     {/* Seção Institucional */}
+      {/* Seção Institucional */}
       <div className="institucional">
-        <div className="card">
-          <FaCogs className="icon" />
-          <h3>Quem Somos</h3>
-          <p>
-            A EF Criativa une o melhor da tradição artesanal com a inovação digital. Com raízes na marcenaria e serralheria, evoluímos para integrar inteligência e design em soluções sob medida. Cada projeto nasce da sensibilidade estética, da precisão técnica e do desejo de transformar espaços em experiências únicas.
-          </p>
-        </div>
-
-        <div className="card">
-          <FaLightbulb className="icon" />
-          <h3>Missão</h3>
-          <p>
-            Projetar e entregar soluções personalizadas que combinam arte e função, utilizando processos eficientes e tecnologia inteligente. Buscamos atender com excelência, respeitando os sonhos de cada cliente e valorizando o cuidado em cada detalhe.
-          </p>
-        </div>
-
-        <div className="card">
-          <FaEye className="icon" />
-          <h3>Visão</h3>
-          <p>
-            Ser reconhecida como referência nacional em design autoral com propósito — onde o feito à mão encontra o digital. Acreditamos na força da originalidade, da confiança e da inovação contínua para transformar ambientes e gerar impacto positivo.
-          </p>
-        </div>
+        {[{
+          Icon: FaCogs, titulo: 'Quem Somos', texto: 'A EF Criativa une o melhor da tradição artesanal com a inovação digital. Com raízes na marcenaria e serralheria, evoluímos para integrar inteligência e design em soluções sob medida. Cada projeto nasce da sensibilidade estética, da precisão técnica e do desejo de transformar espaços em experiências únicas.'
+        }, {
+          Icon: FaLightbulb, titulo: 'Missão', texto: 'Projetar e entregar soluções personalizadas que combinam arte e função, utilizando processos eficientes e tecnologia inteligente. Buscamos atender com excelência, respeitando os sonhos de cada cliente e valorizando o cuidado em cada detalhe.'
+        }, {
+          Icon: FaEye, titulo: 'Visão', texto: 'Ser reconhecida como referência em design autoral com propósito — onde o feito à mão encontra o digital. Acreditamos na força da originalidade, da confiança e da inovação contínua para transformar ambientes e gerar impacto positivo.'
+        }].map(({ Icon, titulo, texto }, i) => (
+          <div className="card" key={i}>
+            <Icon className="icon" />
+            <h3>{titulo}</h3>
+            <p>{texto}</p>
+          </div>
+        ))}
       </div>
 
-          {/* Parceiros */}
+      {/* Parceiros */}
       <div className="parceiros">
         <h3>Parceiros</h3>
         <div className="parceiros-grupo">
