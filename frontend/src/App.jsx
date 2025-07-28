@@ -7,6 +7,7 @@ import Header from './components/Header';
 import Footer from './components/Footer';
 import { AuthProvider } from './context/AuthContext';
 import RotaProtegida from './components/RotaProtegida';
+import CriarUsuarioAdmin from './components/CriarUsuarioAdmin'; // ajuste o caminho conforme a pasta real
 function App() {
   return (
     <AuthProvider>
@@ -16,10 +17,11 @@ function App() {
           <Route path="/" element={<Home />} />
           <Route path="/como-comprar" element={<ComoComprar />} />
           <Route path="/login" element={<Login />} />
+          <Route path="/criar-admin" element={<CriarUsuarioAdmin />} />
           <Route
   path="/admin"
   element={
-    <RotaProtegida>
+    <RotaProtegida tipoPermitido="admin">
       <PainelAdmin />
     </RotaProtegida>
   }

@@ -5,38 +5,51 @@ const fs = require('fs');
 
 const router = express.Router();
 
-// Caminho absoluto para a pasta de imagens
+// 📁 Caminho absoluto para salvar imagens
 const imagensPath = path.join(__dirname, '../../frontend/public/imagens');
 
-// Garante que a pasta existe
+// 🧱 Garante que a pasta existe
 if (!fs.existsSync(imagensPath)) {
   fs.mkdirSync(imagensPath, { recursive: true });
 }
 
-// Configuração do multer
+// 🎯 Configuração do multer
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
     cb(null, imagensPath);
   },
   filename: (req, file, cb) => {
-    const nomeOriginal = file.originalname;
-    const extensao = path.extname(nomeOriginal);
-    const nomeBase = path.basename(nomeOriginal, extensao);
+    const extensao = path.extname(file.originalname);
+    const nomeBase = path.basename(file.originalname, extensao);
     const timestamp = Date.now();
     const nomeFinal = `${nomeBase}-${timestamp}${extensao}`;
     cb(null, nomeFinal);
   }
 });
 
-const upload = multer({ storage });
+const upload = multer({
+  storage,
+  limits: {
+    fileSize: 5 * 1024 * 1024 // 🛡️ Limite de 5MB
+  },
+  fileFilter: (req, file, cb) => {
+    const tiposPermitidos = ['image/jpeg', 'image/png', 'image/webp'];
+    if (tiposPermitidos.includes(file.mimetype)) {
+      cb(null, true);
+    } else {
+      cb(new Error('Tipo de arquivo não permitido'), false);
+    }
+  }
+});
 
+// 🚀 Upload da imagem
 router.post('/', upload.single('imagem'), (req, res) => {
   if (!req.file) {
-    return res.status(400).json({ erro: 'Nenhum arquivo enviado' });
+    return res.status(400).json({ erro: 'Nenhum arquivo enviado ou tipo inválido' });
   }
 
   const caminhoRelativo = `/imagens/${req.file.filename}`;
-  res.json({ imagem: caminhoRelativo });
+  res.status(201).json({ imagem: caminhoRelativo });
 });
 
 module.exports = router;

@@ -7,8 +7,6 @@ function Login() {
   const { login, usuario } = useAuth();
   const navigate = useNavigate();
 
-  console.log('AuthContext atual:', { usuario });
-
   const [email, setEmail] = useState('');
   const [senha, setSenha] = useState('');
   const [erro, setErro] = useState('');
@@ -25,17 +23,13 @@ function Login() {
       });
 
       const data = await res.json();
-      console.log('Resposta da API:', data);
-
       if (data.sucesso) {
         login(data.usuario);
-        console.log('Login bem-sucedido, usuário salvo no contexto:', data.usuario);
-        navigate('/'); // opcional: redireciona para a página inicial
+        navigate('/');
       } else {
         setErro(data.erro || 'Erro ao fazer login');
       }
     } catch (err) {
-      console.error('Erro de conexão:', err);
       setErro('Erro de conexão com o servidor');
     }
   };

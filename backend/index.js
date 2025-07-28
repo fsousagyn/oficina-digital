@@ -9,7 +9,7 @@ const uploadRouter = require('./routes/uploadRoutes');
 const multer = require('multer');
 const path = require('path');
 const fs = require('fs');
-
+const criarAdminRouter = require('./routes/criarAdmin');
 const app = express();
 
 // Middlewares
@@ -22,7 +22,7 @@ app.use('/api/clientes', clientesRouter);
 app.use('/api/orcamentos', orcamentosRouter);
 app.use('/api/produtos', produtosRouter);
 app.use('/api/upload', uploadRouter);
-
+app.use('/criar-admin', criarAdminRouter);
 console.log('🚀 Iniciando servidor...');
 
 // Conexão com MySQL
