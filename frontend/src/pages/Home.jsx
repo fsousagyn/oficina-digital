@@ -10,31 +10,26 @@ function Home() {
   const [indexAtual, setIndexAtual] = useState(0);
   const [mensagem, setMensagem] = useState('');
   const carrosselRef = useRef(null);
+  const [logosClientes, setLogosClientes] = useState([]);
+  const [logosFornecedores, setLogosFornecedores] = useState([]);
 
-  // Carregar imagens do localStorage ou padrão
   useEffect(() => {
-    const salvas = localStorage.getItem('carrosselEF');
-    setImagens(salvas ? JSON.parse(salvas) : [
-      '/imagens/projeto1.jpg',
-      '/imagens/projeto2.jpg',
-      '/imagens/projeto3.jpg',
-    ]);
+    setImagens(JSON.parse(localStorage.getItem('carrosselEF')) || []);
+    setLogosClientes(JSON.parse(localStorage.getItem('logosClientes')) || []);
+    setLogosFornecedores(JSON.parse(localStorage.getItem('logosFornecedores')) || []);
   }, []);
 
-  // Limpar mensagem ao trocar usuário
   useEffect(() => {
     setMensagem('');
   }, [usuario]);
 
-  // Loop automático
   useEffect(() => {
     const intervalo = setInterval(() => {
       setIndexAtual((prev) => (prev + 1) % imagens.length);
-    }, 5000); // 5 segundos
+    }, 5000);
     return () => clearInterval(intervalo);
   }, [imagens]);
 
-  // Swipe por toque
   useEffect(() => {
     const carrossel = carrosselRef.current;
     if (!carrossel) return;
@@ -51,13 +46,17 @@ function Home() {
       const currentX = e.touches[0].clientX;
       const diff = currentX - startX;
       if (Math.abs(diff) > 50) {
-        setIndexAtual((prev) => (diff > 0
-          ? (prev - 1 + imagens.length) % imagens.length
-          : (prev + 1) % imagens.length));
+        setIndexAtual((prev) =>
+          diff > 0
+            ? (prev - 1 + imagens.length) % imagens.length
+            : (prev + 1) % imagens.length
+        );
         isDragging = false;
       }
     };
-    const handleTouchEnd = () => { isDragging = false };
+    const handleTouchEnd = () => {
+      isDragging = false;
+    };
 
     carrossel.addEventListener('touchstart', handleTouchStart);
     carrossel.addEventListener('touchmove', handleTouchMove);
@@ -70,67 +69,120 @@ function Home() {
     };
   }, [imagens]);
 
-  const avancar = () => {
-    if (imagens.length > 0) {
-      setIndexAtual((prev) => (prev + 1) % imagens.length);
-    }
-  };
-
-  const voltar = () => {
-    if (imagens.length > 0) {
-      setIndexAtual((prev) => (prev - 1 + imagens.length) % imagens.length);
-    }
-  };
-
-  const adicionarImagem = () => {
-    const input = document.getElementById('nova-imagem');
-    const file = input?.files[0];
+  const handleUpload = async (event, tipo, lista, setFunc, storageKey) => {
+    const file = event.target.files[0];
     if (!file) return;
 
-    const reader = new FileReader();
-    reader.onload = (event) => {
-      const novaImagem = event.target.result;
-      if (imagens.includes(novaImagem)) {
+    const formData = new FormData();
+    formData.append('imagem', file);
+
+    try {
+      const res = await fetch(`/upload/${tipo}`, {
+        method: 'POST',
+        body: formData,
+      });
+
+      const text = await res.text();
+      let data = {};
+
+      try {
+        data = JSON.parse(text);
+      } catch {
+        console.error('Resposta não é JSON:', text);
+        setMensagem('❌ Resposta inválida do servidor');
+        return;
+      }
+
+      if (!data.url) {
+        setMensagem('❌ Upload falhou ou sem URL');
+        return;
+      }
+
+      const url = data.url;
+
+      if (lista.includes(url)) {
         setMensagem('⚠️ Esta imagem já foi adicionada.');
         return;
       }
-      const atualizadas = [...imagens, novaImagem];
-      setImagens(atualizadas);
-      localStorage.setItem('carrosselEF', JSON.stringify(atualizadas));
-      setIndexAtual(atualizadas.length - 1);
-      setMensagem('✅ Imagem adicionada com sucesso!');
-      input.value = '';
-    };
-    reader.readAsDataURL(file);
+
+      const atualizadas = [...lista, url];
+      setFunc(atualizadas);
+      localStorage.setItem(storageKey, JSON.stringify(atualizadas));
+      setMensagem('✅ Imagem enviada com sucesso!');
+    } catch (err) {
+      setMensagem('❌ Erro ao enviar imagem');
+      console.error(err);
+    }
   };
 
-  const excluirImagem = (index) => {
-    const novaLista = imagens.filter((_, i) => i !== index);
-    setImagens(novaLista);
-    localStorage.setItem('carrosselEF', JSON.stringify(novaLista));
-    setIndexAtual((prev) => Math.max(0, prev - (index <= prev ? 1 : 0)));
-    setMensagem('🗑️ Imagem removida com sucesso!');
-  };
+  const handleRemoverServidor = async (url, tipo, lista, setFunc, storageKey, rotulo) => {
+    const partes = url.split('/');
+    const filename = partes[partes.length - 1];
 
+    try {
+      const res = await fetch(`/delete/${tipo}/${filename}`, {
+        method: 'DELETE',
+      });
+      const data = await res.json();
+      if (data.sucesso) {
+        const novaLista = lista.filter(item => item !== url);
+        setFunc(novaLista);
+        localStorage.setItem(storageKey, JSON.stringify(novaLista));
+        setMensagem(`🗑️ ${rotulo} removida com sucesso!`);
+      } else {
+        setMensagem(`❌ Erro: ${data.erro}`);
+      }
+    } catch (err) {
+      setMensagem('❌ Falha na exclusão');
+      console.error(err);
+    }
+  };
   return (
     <section className="tela">
       <h2>Bem-vindo à EF Criativa</h2>
 
-      {/* Carrossel */}
       <div className="carrossel" ref={carrosselRef}>
-        <button className="carrossel-btn" onClick={voltar}>❮</button>
+        <button
+          className="carrossel-btn"
+          onClick={() =>
+            setIndexAtual((prev) => (prev - 1 + imagens.length) % imagens.length)
+          }
+        >
+          ❮
+        </button>
+
         <div className="carrossel-imagens">
           {imagens.length > 0 && (
             <div className="carrossel-item">
-              <img src={imagens[indexAtual]} alt={`Foto ${indexAtual + 1}`} />
+              <img src={imagens[indexAtual]} alt={`Imagem ${indexAtual + 1}`} />
               {usuario && (
-                <button className="btn-excluir" onClick={() => excluirImagem(indexAtual)}>🗑️</button>
+                <button
+                  className="btn-excluir"
+                  onClick={() =>
+                    handleRemoverServidor(
+                      imagens[indexAtual],
+                      'carrossel',
+                      imagens,
+                      setImagens,
+                      'carrosselEF',
+                      'Imagem'
+                    )
+                  }
+                >
+                  🗑️
+                </button>
               )}
             </div>
           )}
         </div>
-        <button className="carrossel-btn" onClick={avancar}>❯</button>
-        {/* Indicadores visuais */}
+
+        <button
+          className="carrossel-btn"
+          onClick={() => setIndexAtual((prev) => (prev + 1) % imagens.length)}
+        >
+          ❯
+        </button>
+
         <div className="indicadores">
           {imagens.map((_, i) => (
             <span
@@ -145,13 +197,17 @@ function Home() {
 
       {usuario && (
         <div className="upload-carrossel">
-          <label htmlFor="nova-imagem">Adicionar nova imagem ao carrossel:</label>
-          <input type="file" id="nova-imagem" accept="image/*" />
-          <button onClick={adicionarImagem}>Adicionar</button>
+          <label>Adicionar nova imagem ao carrossel:</label>
+          <input
+            type="file"
+            accept="image/*"
+            onChange={(e) =>
+              handleUpload(e, 'carrossel', imagens, setImagens, 'carrosselEF')
+            }
+          />
         </div>
       )}
 
-      {/* Vídeo institucional */}
       <div className="video-institucional">
         <h3>Conheça nossa história</h3>
         <video controls>
@@ -160,15 +216,27 @@ function Home() {
         </video>
       </div>
 
-      {/* Seção Institucional */}
       <div className="institucional">
-        {[{
-          Icon: FaCogs, titulo: 'Quem Somos', texto: 'A EF Criativa une o melhor da tradição artesanal com a inovação digital. Com raízes na marcenaria e serralheria, evoluímos para integrar inteligência e design em soluções sob medida. Cada projeto nasce da sensibilidade estética, da precisão técnica e do desejo de transformar espaços em experiências únicas.'
-        }, {
-          Icon: FaLightbulb, titulo: 'Missão', texto: 'Projetar e entregar soluções personalizadas que combinam arte e função, utilizando processos eficientes e tecnologia inteligente. Buscamos atender com excelência, respeitando os sonhos de cada cliente e valorizando o cuidado em cada detalhe.'
-        }, {
-          Icon: FaEye, titulo: 'Visão', texto: 'Ser reconhecida como referência em design autoral com propósito — onde o feito à mão encontra o digital. Acreditamos na força da originalidade, da confiança e da inovação contínua para transformar ambientes e gerar impacto positivo.'
-        }].map(({ Icon, titulo, texto }, i) => (
+        {[
+          {
+            Icon: FaCogs,
+            titulo: 'Quem Somos',
+            texto:
+              'A EF Criativa une o melhor da tradição artesanal com a inovação digital...',
+          },
+          {
+            Icon: FaLightbulb,
+            titulo: 'Missão',
+            texto:
+              'Projetar soluções personalizadas com arte e tecnologia...',
+          },
+          {
+            Icon: FaEye,
+            titulo: 'Visão',
+            texto:
+              'Ser referência em design autoral com propósito...',
+          },
+        ].map(({ Icon, titulo, texto }, i) => (
           <div className="card" key={i}>
             <Icon className="icon" />
             <h3>{titulo}</h3>
@@ -177,24 +245,99 @@ function Home() {
         ))}
       </div>
 
-      {/* Parceiros */}
       <div className="parceiros">
         <h3>Parceiros</h3>
         <div className="parceiros-grupo">
           <div className="parceiros-cliente">
             <h4>Clientes</h4>
             <div className="logos">
-              <img src="/imagens/cliente1.png" alt="Cliente 1" />
-              <img src="/imagens/cliente2.jpeg" alt="Cliente 2" />
-              <img src="/imagens/cliente2.png" alt="Cliente 2" />
+              {logosClientes.map((logo, index) => (
+                <div key={index} className="logo-item">
+                  <img src={logo} alt={`Cliente ${index + 1}`} />
+                  {usuario && (
+                    <button
+                      className="btn-excluir"
+                      onClick={() =>
+                        handleRemoverServidor(
+                          logo,
+                          'clientes',
+                          logosClientes,
+                          setLogosClientes,
+                          'logosClientes',
+                          'Logo de cliente'
+                        )
+                      }
+                    >
+                      🗑️
+                    </button>
+                  )}
+                </div>
+              ))}
             </div>
+            {usuario && (
+              <div className="upload-logo">
+                <label>Adicionar logo de cliente:</label>
+                <input
+                  type="file"
+                  accept="image/*"
+                  onChange={(e) =>
+                    handleUpload(
+                      e,
+                      'clientes',
+                      logosClientes,
+                      setLogosClientes,
+                      'logosClientes'
+                    )
+                  }
+                />
+              </div>
+            )}
           </div>
+
           <div className="parceiros-fornecedor">
             <h4>Fornecedores</h4>
             <div className="logos">
-              <img src="/imagens/fornecedor1.jpeg" alt="Fornecedor 1" />
-              <img src="/imagens/fornecedor2.png" alt="Fornecedor 2" />
+              {logosFornecedores.map((logo, index) => (
+                <div key={index} className="logo-item">
+                  <img src={logo} alt={`Fornecedor ${index + 1}`} />
+                  {usuario && (
+                    <button
+                      className="btn-excluir"
+                      onClick={() =>
+                        handleRemoverServidor(
+                          logo,
+                          'fornecedores',
+                          logosFornecedores,
+                          setLogosFornecedores,
+                          'logosFornecedores',
+                          'Logo de fornecedor'
+                        )
+                      }
+                    >
+                      🗑️
+                    </button>
+                  )}
+                </div>
+              ))}
             </div>
+            {usuario && (
+              <div className="upload-logo">
+                <label>Adicionar logo de fornecedor:</label>
+                <input
+                  type="file"
+                  accept="image/*"
+                  onChange={(e) =>
+                    handleUpload(
+                      e,
+                      'fornecedores',
+                      logosFornecedores,
+                      setLogosFornecedores,
+                      'logosFornecedores'
+                    )
+                  }
+                />
+              </div>
+            )}
           </div>
         </div>
       </div>

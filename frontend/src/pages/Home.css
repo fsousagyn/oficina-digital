@@ -1,305 +1,165 @@
-/* 🧱 Área principal da tela */
-.tela {
-  width: 100vw;
-  margin: 0;
-  padding: 2rem;
-  background-color: #fdfaf5;
-  font-family: 'Poppins', sans-serif;
-  color: #2e2e2e;
-  min-height: calc(100vh - 80px);
-  box-sizing: border-box;
-  display: block;
-}
+/* 🧱 Área principal da tela */ .tela { width: 100vw; margin: 0; padding: 2rem; background-color: #fdfaf5; font-family: 'Poppins', sans-serif; color: #2e2e2e; min-height: calc(100vh - 80px); box-sizing: border-box; display: block; }
 
-/* 🏷️ Título */
-.tela h2 {
-  text-align: center;
-  font-size: 2rem;
-  color: #4b3621;
-  margin-bottom: 2rem;
-}
+/* 🏷️ Título */ .tela h2 { text-align: center; font-size: 2rem; color: #4b3621; margin-bottom: 2rem; }
 
-/* 🎞️ Carrossel */
-.carrossel {
-  position: relative;
-  overflow: hidden;
-  border-radius: 8px;
-  margin-bottom: 2rem;
-  height: 300px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
+/* 🎞️ Carrossel */ .carrossel { position: relative; overflow: hidden; border-radius: 8px; margin-bottom: 2rem; height: 300px; display: flex; align-items: center; justify-content: center; }
 
-.carrossel-imagens {
-  width: 100%;
-  height: 100%;
-  display: flex;
-  justify-content: center;
-  transition: transform 0.5s ease-in-out;
-}
+.carrossel-imagens { width: 100%; height: 100%; display: flex; justify-content: center; transition: transform 0.5s ease-in-out; }
 
-.carrossel-imagens img {
-  max-width: 100%;
-  max-height: 100%;
-  object-fit: cover;
-  border-radius: 8px;
-}
+.carrossel-imagens img { max-width: 100%; max-height: 100%; object-fit: cover; border-radius: 8px; }
 
-.carrossel-item {
-  position: relative;
-  display: inline-block;
-}
+.carrossel-item { position: relative; display: inline-block; }
 
-.carrossel-item img {
-  max-width: 100%;
-  height: auto;
-  border-radius: 8px;
-}
+.carrossel-item img { max-width: 100%; height: auto; border-radius: 8px; }
 
-/* 🔘 Botões do carrossel */
-.carrossel-btn {
-  position: absolute;
-  top: 50%;
-  transform: translateY(-50%);
-  background-color: rgba(75, 54, 33, 0.6);
-  color: white;
-  border: none;
-  font-size: 2rem;
-  padding: 0.5rem 1rem;
-  cursor: pointer;
-  z-index: 10;
-  border-radius: 4px;
-}
+/* 🔘 Botões do carrossel */ .carrossel-btn { position: absolute; top: 50%; transform: translateY(-50%); background-color: rgba(75, 54, 33, 0.6); color: white; border: none; font-size: 2rem; padding: 0.5rem 1rem; cursor: pointer; z-index: 10; border-radius: 4px; }
 
-.carrossel-btn:hover {
-  background-color: rgba(75, 54, 33, 0.8);
-}
+.carrossel-btn:hover { background-color: rgba(75, 54, 33, 0.8); }
 
-.carrossel-btn:first-of-type {
-  left: 10px;
-}
+.carrossel-btn:first-of-type { left: 10px; }
 
-.carrossel-btn:last-of-type {
-  right: 10px;
-}
+.carrossel-btn:last-of-type { right: 10px; }
 
-/* 🔘 Indicadores visuais do carrossel */
-.indicadores {
-  position: absolute;
-  bottom: 10px;
-  left: 50%;
-  transform: translateX(-50%);
-  display: flex;
-  gap: 8px;
-  z-index: 5;
-}
+/* 🖼️ Upload de imagem */ .upload-carrossel { margin-top: 1rem; padding: 1rem; background-color: #f5e9dc; border: 1px solid #d2b48c; border-radius: 8px; }
 
-.indicador {
-  width: 10px;
-  height: 10px;
-  background-color: #d2b48c;
-  border-radius: 50%;
-  transition: background-color 0.3s ease;
-}
+.upload-carrossel input[type="file"] { display: block; margin-bottom: 1rem; }
 
-.indicador.ativo {
-  background-color: #4b3621;
-}
+.upload-carrossel button { background-color: #4b3621; color: white; border: none; padding: 0.5rem 1rem; border-radius: 4px; cursor: pointer; }
 
-/* 🖼️ Upload de imagem */
-.upload-carrossel {
-  margin-top: 1rem;
-  padding: 1rem;
-  background-color: #f5e9dc;
-  border: 1px solid #d2b48c;
-  border-radius: 8px;
-}
+.upload-carrossel button:hover { background-color: #6b4a2d; }
 
-/* 🗑️ Botão de excluir imagem */
-.btn-excluir {
-  position: absolute;
-  top: 8px;
-  right: 8px;
-  background-color: #c0392b;
-  color: white;
-  border: none;
-  border-radius: 50%;
-  padding: 0.4rem;
-  cursor: pointer;
-  font-size: 1rem;
-}
+/* 🗑️ Botão de excluir imagem */ .btn-excluir { position: absolute; top: 8px; right: 8px; background-color: #c0392b; color: white; border: none; border-radius: 50%; padding: 0.4rem; cursor: pointer; font-size: 1rem; }
 
-.btn-excluir:hover {
-  background-color: #e74c3c;
-}
+.btn-excluir:hover { background-color: #e74c3c; }
 
-/* 🎬 Vídeo institucional */
-.video-institucional {
-  margin-top: 3rem;
-  text-align: center;
-  transition: transform 0.3s ease-in-out;
-}
+/* 🎬 Vídeo institucional */ .video-institucional { margin-top: 3rem; text-align: center; transition: transform 0.3s ease-in-out; }
 
-.video-institucional:hover {
-  transform: scale(1.05);
-}
+.video-institucional:hover { transform: scale(1.05); }
 
-.video-institucional h3 {
-  font-size: 1.4rem;
-  color: #4b3621;
-  margin-bottom: 1rem;
-}
+.video-institucional h3 { font-size: 1.4rem; color: #4b3621; margin-bottom: 1rem; }
 
-.video-institucional video {
-  width: 100%;
-  max-width: 720px;
-  border-radius: 8px;
-  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.1);
-}
+.video-institucional video { width: 100%; max-width: 720px; border-radius: 8px; box-shadow: 0 2px 12px rgba(0, 0, 0, 0.1); }
 
-/* 🤝 Parceiros */
-.parceiros {
-  margin-top: 3rem;
-}
+/* 🤝 Parceiros */ .parceiros { margin-top: 3rem; }
 
-.parceiros h3 {
-  font-size: 1.6rem;
-  color: #4b3621;
-  margin-bottom: 1rem;
-  text-align: center;
-}
+.parceiros h3 { font-size: 1.6rem; color: #4b3621; margin-bottom: 1rem; text-align: center; }
 
-.parceiros-grupo {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 2rem;
-  justify-content: center;
-}
+.parceiros-grupo { display: flex; flex-wrap: wrap; gap: 2rem; justify-content: center; }
 
-.parceiros-cliente,
-.parceiros-fornecedor {
-  flex: 1;
-  min-width: 280px;
-  background-color: #f5e9dc;
-  padding: 1rem;
-  border-radius: 8px;
-}
+.parceiros-cliente, .parceiros-fornecedor { flex: 1; min-width: 280px; background-color: #f5e9dc; padding: 1rem; border-radius: 8px; }
 
-.parceiros-cliente h4,
-.parceiros-fornecedor h4 {
-  font-size: 1.2rem;
-  color: #4b3621;
-  margin-bottom: 0.5rem;
-}
+.parceiros-cliente h4, .parceiros-fornecedor h4 { font-size: 1.2rem; color: #4b3621; margin-bottom: 0.5rem; }
 
-.logos {
-  display: flex;
-  gap: 1rem;
-  flex-wrap: wrap;
-  justify-content: center;
-}
+.logos { display: flex; gap: 1rem; flex-wrap: wrap; justify-content: center; }
 
-.logos img {
-  height: 60px;
-  object-fit: contain;
-  border-radius: 4px;
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
-  cursor: pointer;
-}
+.logos img { height: 60px; object-fit: contain; border-radius: 4px; transition: transform 0.3s ease, box-shadow 0.3s ease; cursor: pointer; }
 
-.logos img:hover {
-  transform: scale(1.2);
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
-}
+.logos img:hover { transform: scale(1.2); box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2); }
 
-/* 📩 Feedback */
-.mensagem-feedback {
-  margin: 1rem 0;
-  color: #4b3621;
-  font-weight: bold;
-  font-size: 1rem;
-  text-align: justify;
-}
+/* 📩 Feedback */ .mensagem-feedback { margin: 1rem 0; color: #4b3621; font-weight: bold; font-size: 1rem; text-align: justify; }
 
-/* 🧾 Seção Institucional */
-.institucional {
-  display: flex;
-  justify-content: center;
-  gap: 2rem;
-  margin-top: 2rem;
-  flex-wrap: wrap;
-  text-align: justify;
-}
+/* 🧾 Seção Institucional */ .institucional { display: flex; justify-content: center; gap: 2rem; margin-top: 2rem; flex-wrap: wrap; text-align: justify; }
 
-.card {
-  flex: 1 1 300px;
-  background-color: #fff8f0;
-  border-radius: 12px;
-  padding: 1.5rem;
-  box-shadow: 0 0 10px rgba(0,0,0,0.1);
-  text-align: justify;
-  transition: transform 0.3s ease-in-out;
-}
+.card { flex: 1 1 300px; background-color: #fff8f0; border-radius: 12px; padding: 1.5rem; box-shadow: 0 0 10px rgba(0,0,0,0.1); text-align: justify; transition: transform 0.3s ease-in-out; }
 
-.card:hover {
-  transform: scale(1.05); /* Zoom leve */
-}
+.card:hover { transform: scale(1.05); /* Zoom leve */ }
 
-.card h3 {
-  margin-top: 1rem;
-  color: #4b3621;
-}
+.card h3 { margin-top: 1rem; color: #4b3621; }
 
-.card p {
-  font-size: 0.95rem;
-  color: #333;
-  line-height: 1.5;
-}
+.card p { font-size: 0.95rem; color: #333; line-height: 1.5; }
 
-.icon {
-  font-size: 2rem;
-  color: #4b3621;
-}
+.icon { font-size: 2rem; color: #4b3621; }
 
-/* 📦 Rodapé */
-.footer {
-  margin-top: 4rem;
-  padding: 1rem;
-  text-align: center;
-  background-color: #d2b48c;
-  color: #4b3621;
-  font-size: 0.9rem;
-  border-radius: 8px;
-}
+/* 📦 Rodapé */ .footer { margin-top: 4rem; padding: 1rem; text-align: center; background-color: #d2b48c; color: #4b3621; font-size: 0.9rem; border-radius: 8px; }
 
-/* 📱 Responsivo */
-@media (max-width: 600px) {
-  .carrossel {
-    height: 200px;
-    border-radius: 4px;
-  }
+/* 📱 Responsivo */ @media (max-width: 600px) { .carrossel { height: 200px; }
 
-  .carrossel-btn {
-    font-size: 1.5rem;
-    padding: 0.4rem 0.8rem;
-  }
+.carrossel-btn { font-size: 1.5rem; padding: 0.4rem 0.8rem; }
 
-  .tela h2 {
-    font-size: 1.6rem;
-  }
+.tela h2 { font-size: 1.6rem; }
 
-  .video-institucional h3,
-  .parceiros h3 {
-    font-size: 1.2rem;
-  }
+.video-institucional h3, .parceiros h3 { font-size: 1.2rem; }
 
-  .footer {
-    font-size: 0.8rem;
-  }
+.footer { font-size: 0.8rem; } }
 
-  .indicador {
-    width: 8px;
-    height: 8px;
-  }
-}
+/* ✅ Indicadores visuais do carrossel */ .indicadores { position: absolute; bottom: 10px; left: 50%; transform: translateX(-50%); display: flex; gap: 8px; z-index: 5; }
+
+.indicador { width: 10px; height: 10px; background-color: #d2b48c; border-radius: 50%; transition: background-color 0.3s ease; }
+
+.indicador.ativo { background-color: #4b3621; }
+
+/* ✅ Transição suave no carrossel de imagens */ .carrossel-imagens { transition: transform 0.5s ease-in-out; }
+
+/* ✅ Melhoria de responsividade */ @media (max-width: 600px) { .indicador { width: 8px; height: 8px; }
+
+.carrossel { height: 200px; border-radius: 4px; }
+
+.carrossel-btn { font-size: 1.5rem; padding: 0.4rem 0.8rem; } }
+
+/* 🖼️ Upload de imagem com salvamento em disco */ .upload-carrossel { margin-top: 1rem; padding: 1rem; background-color: #f5e9dc; border: 1px solid #d2b48c; border-radius: 8px; }
+
+.upload-carrossel input[type="file"] { display: block; margin-bottom: 1rem; }
+
+.upload-carrossel button { background-color: #4b3621; color: white; border: none; padding: 0.5rem 1rem; border-radius: 4px; cursor: pointer; }
+
+.upload-carrossel button:hover { background-color: #6b4a2d; }
+
+/* 🗑️ Botão de excluir imagem com salvamento em disco */ .btn-excluir { position: absolute; top: 8px; right: 8px; background-color: #c0392b; color: white; border: none; border-radius: 50%; padding: 0.4rem; cursor: pointer; font-size: 1rem; }
+
+.btn-excluir:hover { background-color: #e74c3c; }
+
+/* 🤝 Parceiros com lógica de salvamento em disco */ .parceiros { margin-top: 3rem; }
+
+.parceiros h3 { font-size: 1.6rem; color: #4b3621; margin-bottom: 1rem; text-align: center; }
+
+.parceiros-grupo { display: flex; flex-wrap: wrap; gap: 2rem; justify-content: center; }
+
+.parceiros-cliente, .parceiros-fornecedor { flex: 1; min-width: 280px; background-color: #f5e9dc; padding: 1rem; border-radius: 8px; }
+
+.parceiros-cliente h4, .parceiros-fornecedor h4 { font-size: 1.2rem; color: #4b3621; margin-bottom: 0.5rem; }
+
+.logos { display: flex; gap: 1rem; flex-wrap: wrap; justify-content: center; }
+
+.logos img { height: 60px; object-fit: contain; border-radius: 4px; transition: transform 0.3s ease, box-shadow 0.3s ease; cursor: pointer; }
+
+.logos img:hover { transform: scale(1.2); box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2); }
+
+/* 📩 Feedback */ .mensagem-feedback { margin: 1rem 0; color: #4b3621; font-weight: bold; font-size: 1rem; text-align: justify; }
+
+/* 🧾 Seção Institucional */ .institucional { display: flex; justify-content: center; gap: 2rem; margin-top: 2rem; flex-wrap: wrap; text-align: justify; }
+
+.card { flex: 1 1 300px; background-color: #fff8f0; border-radius: 12px; padding: 1.5rem; box-shadow: 0 0 10px rgba(0,0,0,0.1); text-align: justify; transition: transform 0.3s ease-in-out; }
+
+.card:hover { transform: scale(1.05); /* Zoom leve */ }
+
+.card h3 { margin-top: 1rem; color: #4b3621; }
+
+.card p { font-size: 0.95rem; color: #333; line-height: 1.5; }
+
+.icon { font-size: 2rem; color: #4b3621; }
+
+/* 📦 Rodapé */ .footer { margin-top: 4rem; padding: 1rem; text-align: center; background-color: #d2b48c; color: #4b3621; font-size: 0.9rem; border-radius: 8px; }
+
+/* 📱 Responsivo */ @media (max-width: 600px) { .carrossel { height: 200px; }
+
+.carrossel-btn { font-size: 1.5rem; padding: 0.4rem 0.8rem; }
+
+.tela h2 { font-size: 1.6rem; }
+
+.video-institucional h3, .parceiros h3 { font-size: 1.2rem; }
+
+.footer { font-size: 0.8rem; } }
+
+/* ✅ Indicadores visuais do carrossel */ .indicadores { position: absolute; bottom: 10px; left: 50%; transform: translateX(-50%); display: flex; gap: 8px; z-index: 5; }
+
+.indicador { width: 10px; height: 10px; background-color: #d2b48c; border-radius: 50%; transition: background-color 0.3s ease; }
+
+.indicador.ativo { background-color: #4b3621; }
+
+/* ✅ Transição suave no carrossel de imagens */ .carrossel-imagens { transition: transform 0.5s ease-in-out; }
+
+/* ✅ Melhoria de responsividade */ @media (max-width: 600px) { .indicador { width: 8px; height: 8px; }
+
+.carrossel { height: 200px; border-radius: 4px; }
+
+.carrossel-btn { font-size: 1.5rem; padding: 0.4rem 0.8rem; } }
