@@ -8,13 +8,26 @@ function UploadComponent({ onUploadSuccess, categoriaInicial = 'carrossel' }) {
   const [savedImages, setSavedImages] = useState([]);
   const [categoria, setCategoria] = useState(categoriaInicial);
 
-  useEffect(() => {
+  const carregarImagensSalvas = () => {
     const imagensSalvas = JSON.parse(localStorage.getItem(categoria)) || [];
-    const imagensFormatadas = imagensSalvas.map((url) => ({
-      name: decodeURIComponent(url.split('/').pop()),
-      url,
-    }));
+    const imagensFormatadas = imagensSalvas
+      .filter((url) => url && url.startsWith('http'))
+      .map((url) => ({
+        name: decodeURIComponent(url.split('/').pop()),
+        url,
+      }));
     setSavedImages(imagensFormatadas);
+  };
+
+  const limparImagensInvalidas = () => {
+    const imagensSalvas = JSON.parse(localStorage.getItem(categoria)) || [];
+    const imagensValidas = imagensSalvas.filter((url) => url && url.startsWith('http'));
+    localStorage.setItem(categoria, JSON.stringify(imagensValidas));
+    carregarImagensSalvas();
+  };
+
+  useEffect(() => {
+    limparImagensInvalidas();
   }, [categoria]);
 
   const handleFileChange = (event) => {
@@ -52,9 +65,10 @@ function UploadComponent({ onUploadSuccess, categoriaInicial = 'carrossel' }) {
           localStorage.setItem(categoria, JSON.stringify(novaLista));
 
           if (onUploadSuccess) {
-  onUploadSuccess(url); // envia apenas a nova imagem
-}
-          setSavedImages((prev) => [...prev, { name: decodedName, url }]);
+            onUploadSuccess(url);
+          }
+
+          carregarImagensSalvas();
         } else {
           console.error('❌ Upload falhou:', file.name);
         }
@@ -135,8 +149,18 @@ function UploadComponent({ onUploadSuccess, categoriaInicial = 'carrossel' }) {
           <div className="upload-preview">
             {savedImages.map(({ name, url }, i) => (
               <div key={i} className="preview-item">
-                <img src={`http://localhost:3001${url}`} alt={name} />
+                <img src={url} alt={name} />
                 <span>{name}</span>
+                <button
+                  onClick={() => {
+                    const novaLista = savedImages.filter((_, idx) => idx !== i);
+                    const urls = novaLista.map((img) => img.url);
+                    localStorage.setItem(categoria, JSON.stringify(urls));
+                    setSavedImages(novaLista);
+                  }}
+                >
+                  🗑️ Excluir
+                </button>
               </div>
             ))}
           </div>

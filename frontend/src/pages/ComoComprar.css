@@ -113,16 +113,39 @@ textarea:focus {
 
 /* Responsividade */
 @media (max-width: 600px) {
-  .tela {
-    padding: 1.5rem;
+  input,
+  select,
+  textarea {
+    font-size: 0.95rem;
+    padding: 0.5rem 0.6rem;
   }
 
-  .tela h1 {
-    font-size: 1.6rem;
+  label {
+    font-size: 0.95rem;
   }
 
-  .botoes {
-    flex-direction: column;
-    gap: 0.75rem;
+  .resumo-lista li {
+    font-size: 0.95rem;
   }
 }
+.resumo-lista img {
+  max-width: 100%;
+  height: auto;
+  border-radius: 8px;
+  margin-top: 0.5rem;
+  box-shadow: 0 1px 6px rgba(0,0,0,0.1);
+}
+.form-login-cliente {
+  max-width: 400px;
+  margin: 0 auto;
+  text-align: center;
+}
+
+.form-login-cliente input {
+  margin-bottom: 1rem;
+}
+
+.form-login-cliente button {
+  width: 100%;
+}
+

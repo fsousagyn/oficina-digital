@@ -17,12 +17,14 @@ function ComoComprar() {
   const [telefone, setTelefone] = useState('');
   const [mensagem, setMensagem] = useState('');
   const [tipoProduto, setTipoProduto] = useState('');
+  const [resumo, setResumo] = useState(null);
+  const [imagemReferencia, setImagemReferencia] = useState(null);
+
   const [camposVisiveis, setCamposVisiveis] = useState({
     padrao: false,
     personalizar: false,
     novo: false,
   });
-  const [resumo, setResumo] = useState(null);
 
   const produtosPorLinha = {
     pet: ['Comedouro', 'Caminha', 'Brinquedo'],
@@ -33,32 +35,12 @@ function ComoComprar() {
   };
 
   const produtosComPreco = {
-  pet: {
-    Comedouro: 49.90,
-    Caminha: 129.90,
-    Brinquedo: 19.90,
-  },
-  residencial: {
-    Mesa: 399.90,
-    Cadeira: 149.90,
-    Estante: 599.90,
-  },
-  comercial: {
-    'Expositor pequeno': 299.90,
-    'Expositor médio': 499.90,
-    'Expositor grande': 799.90,
-  },
-  decoracao: {
-    Quadro: 89.90,
-    Escultura: 149.90,
-    Vaso: 59.90,
-  },
-  utilidades: {
-    Organizador: 39.90,
-    'Porta-objetos': 29.90,
-    Suporte: 24.90,
-  },
-};
+    pet: { Comedouro: 49.9, Caminha: 129.9, Brinquedo: 19.9 },
+    residencial: { Mesa: 399.9, Cadeira: 149.9, Estante: 599.9 },
+    comercial: { 'Expositor pequeno': 299.9, 'Expositor médio': 499.9, 'Expositor grande': 799.9 },
+    decoracao: { Quadro: 89.9, Escultura: 149.9, Vaso: 59.9 },
+    utilidades: { Organizador: 39.9, 'Porta-objetos': 29.9, Suporte: 24.9 },
+  };
 
   useEffect(() => {
     setCamposVisiveis({
@@ -69,10 +51,28 @@ function ComoComprar() {
   }, [tipoProduto]);
 
   const validarFormulario = () => {
-    if (!cliente.nome || !cliente.email || !telefone || !tipoProduto) {
+    if (!cliente?.nome || !cliente?.email || !telefone || !tipoProduto) {
       alert('Preencha nome, email, telefone e tipo de solicitação.');
       return false;
     }
+
+    if (tipoProduto === 'padrao') {
+      const linha = document.getElementById('linha-produto')?.value;
+      const produto = document.getElementById('produto-padrao')?.value;
+      if (!linha || !produto) {
+        alert('Selecione a linha e o produto.');
+        return false;
+      }
+    }
+
+    if (tipoProduto === 'novo') {
+      const tipoProjeto = document.getElementById('tipo-projeto')?.value;
+      if (!tipoProjeto) {
+        alert('Informe o tipo de projeto.');
+        return false;
+      }
+    }
+
     return true;
   };
 
@@ -96,39 +96,26 @@ function ComoComprar() {
     }
   };
 
-  const handleLogout = () => {
-    logoutCliente();
+  const handleLogout = () => logoutCliente();
+
+  const handleUploadImagem = async () => {
+    const file = document.getElementById('imagem-referencia')?.files?.[0];
+    if (!file) return null;
+
+    const formData = new FormData();
+    formData.append('imagem', file);
+
+    try {
+      const resposta = await axios.post('/upload/novo', formData);
+      return resposta.data.url;
+    } catch (erro) {
+      console.error('Erro no upload da imagem:', erro);
+      return null;
+    }
   };
-
-  const handleVisualizar = () => {
-  if (!validarFormulario()) return;
-
-  const linha = document.getElementById('linha-produto')?.value || '';
-  const produto = document.getElementById('produto-padrao')?.value || '';
-  const preco = produtosComPreco[linha]?.[produto] ?? null;
-
-  const dados = {
-    nome: cliente.nome,
-    email: cliente.email,
-    telefone,
-    tipoProduto,
-    mensagem: document.getElementById('mensagem')?.value || '',
-    linha,
-    produto,
-    preco,
-    tipoProjeto: document.getElementById('tipo-projeto')?.value || '',
-    estrutura: document.getElementById('estrutura')?.value || '',
-    altura: document.getElementById('altura')?.value || '',
-    largura: document.getElementById('largura')?.value || '',
-    profundidade: document.getElementById('profundidade')?.value || '',
-  };
-
-  setResumo(dados);
-};
 
   const handleSalvarOrcamento = async () => {
     if (!validarFormulario()) return;
-    
 
     const tipo_solicitacao = tipoProduto;
     const mensagemTexto = document.getElementById('mensagem')?.value || '';
@@ -142,6 +129,9 @@ function ComoComprar() {
       profundidade: document.getElementById('profundidade')?.value || '',
     };
 
+    const imagemUrl = await handleUploadImagem();
+    if (imagemUrl) dados.imagemReferencia = imagemUrl;
+
     try {
       await axios.post('/api/orcamentos', {
         cliente_email: cliente.email,
@@ -154,109 +144,32 @@ function ComoComprar() {
       alert('Erro ao salvar orçamento.');
     }
   };
+  const handleVisualizar = () => {
+    if (!validarFormulario()) return;
 
-const gerarPDF = async () => {
-  if (!validarFormulario()) return;
+    const linha = document.getElementById('linha-produto')?.value || '';
+    const produto = document.getElementById('produto-padrao')?.value || '';
+    const preco = produtosComPreco[linha]?.[produto] ?? null;
 
-  const doc = new jsPDF();
-  const margem = 15;
-  let y = 20;
+    const dados = {
+      nome: cliente.nome,
+      email: cliente.email,
+      telefone,
+      tipoProduto,
+      mensagem: document.getElementById('mensagem')?.value || '',
+      linha,
+      produto,
+      preco,
+      tipoProjeto: document.getElementById('tipo-projeto')?.value || '',
+      estrutura: document.getElementById('estrutura')?.value || '',
+      altura: document.getElementById('altura')?.value || '',
+      largura: document.getElementById('largura')?.value || '',
+      profundidade: document.getElementById('profundidade')?.value || '',
+      imagemReferencia,
+    };
 
-  // Logo
-  const logo = new Image();
-  logo.src = '/imagens/logo-ef.png'; // caminho relativo ao public/
-  await new Promise(resolve => {
-    logo.onload = resolve;
-  });
-  doc.addImage(logo, 'PNG', margem, y, 30, 30);
-  doc.setFont('helvetica', 'bold');
-  doc.setFontSize(18);
-  doc.setTextColor(75, 54, 33);
-  doc.text('Orçamento - EF Criativa', margem + 35, y + 10);
-  y += 40;
-
-  // Cliente
-  doc.setFontSize(12);
-  doc.setFont('helvetica', 'bold');
-  doc.text('Dados do Cliente:', margem, y);
-  y += 8;
-
-  doc.setFont('helvetica', 'normal');
-  doc.text(`Nome: ${cliente.nome}`, margem, y); y += 6;
-  doc.text(`Email: ${cliente.email}`, margem, y); y += 6;
-  doc.text(`Telefone: ${telefone}`, margem, y); y += 10;
-
-  // Detalhes
-  doc.setFont('helvetica', 'bold');
-  doc.text('Detalhes do Orçamento:', margem, y);
-  y += 8;
-
-  doc.setFont('helvetica', 'normal');
-  doc.text(`Tipo de solicitação: ${tipoProduto}`, margem, y); y += 6;
-  doc.text(`Mensagem: ${document.getElementById('mensagem')?.value || ''}`, margem, y); y += 10;
-
-  // Tabela de itens
-  const itens = [];
-
-  if (tipoProduto === 'padrao') {
-  const linha = document.getElementById('linha-produto')?.value || '';
-  const produto = document.getElementById('produto-padrao')?.value || '';
-  const preco = produtosComPreco[linha]?.[produto] ?? 'N/D';
-
-  itens.push(['Linha de produto', linha]);
-  itens.push(['Produto', produto]);
-  itens.push(['Valor', `R$ ${preco.toFixed(2)}`]);
-}
-
-  if (tipoProduto === 'novo') {
-    itens.push(['Tipo de projeto', document.getElementById('tipo-projeto')?.value || '']);
-    itens.push(['Estrutura', document.getElementById('estrutura')?.value || '']);
-    itens.push(['Altura (cm)', document.getElementById('altura')?.value || '']);
-    itens.push(['Largura (cm)', document.getElementById('largura')?.value || '']);
-    itens.push(['Profundidade (cm)', document.getElementById('profundidade')?.value || '']);
-  }
-
-  autoTable(doc, {
-    startY: y,
-    head: [['Item', 'Detalhe']],
-    body: itens,
-    styles: {
-      fillColor: [210, 180, 140], // tom terroso
-      textColor: [75, 54, 33],
-      fontSize: 11,
-    },
-    headStyles: {
-      fillColor: [139, 69, 19],
-      textColor: [255, 255, 255],
-      fontStyle: 'bold',
-    },
-    margin: { left: margem, right: margem },
-  });
-
-  y = doc.lastAutoTable.finalY + 10;
-
-  // Rodapé
-  doc.setFont('helvetica', 'italic');
-  doc.setTextColor(100);
-  doc.text('Este orçamento é válido por 15 dias. Para dúvidas ou ajustes, entre em contato conosco.', margem, y);
-  y += 20;
-
-  doc.setFont('helvetica', 'normal');
-  doc.setTextColor(75, 54, 33);
-  doc.text('Assinatura do cliente: ____________________________', margem, y);
-
-  // QR Code para WhatsApp
-  const whatsappLink = `https://wa.me/5562996204767?text=Olá!%20Gostaria%20de%20falar%20sobre%20meu%20orçamento.`;
-  const qrCanvas = document.createElement('canvas');
-  await QRCode.toCanvas(qrCanvas, whatsappLink, { width: 80, margin: 1 });
-  const qrDataUrl = qrCanvas.toDataURL('image/png');
-  doc.addImage(qrDataUrl, 'PNG', 150, 20, 40, 40);
-  doc.setFontSize(10);
-  doc.text('Fale conosco via WhatsApp', 150, 65);
-
-  doc.save('orcamento-ef-criativa.pdf');
-};
-
+    setResumo(dados);
+  };
 
   const gerarImagem = () => {
     if (!validarFormulario()) return;
@@ -289,7 +202,6 @@ const gerarPDF = async () => {
           {modo === 'cadastro' && (
             <input type="text" placeholder="Seu nome" value={nome} onChange={(e) => setNome(e.target.value)} />
           )}
-
           <input type="email" placeholder="Seu e-mail" value={email} onChange={(e) => setEmail(e.target.value)} />
           <input type="password" placeholder="Sua senha" value={senha} onChange={(e) => setSenha(e.target.value)} />
 
@@ -314,126 +226,92 @@ const gerarPDF = async () => {
 
           <form id="form-como-comprar">
             <fieldset>
-              <legend>Cliente</legend>
-              <label htmlFor="nome">Nome:</label>
-              <input type="text" id="nome" defaultValue={cliente.nome} required />
-
-              <label htmlFor="email">Email:</label>
-              <input type="email" id="email" defaultValue={cliente.email} required />
-
-              <label htmlFor="telefone">Telefone:</label>
-              <input type="text" id="telefone" value={telefone} onChange={(e) => setTelefone(e.target.value)} required />
-
-              <label htmlFor="mensagem">Mensagem:</label>
-              <textarea id="mensagem" required></textarea>
+              <legend>Contato</legend>
+              <input type="text" id="telefone" placeholder="Telefone" value={telefone} onChange={(e) => setTelefone(e.target.value)} required />
+              <textarea id="mensagem" placeholder="Mensagem" required></textarea>
             </fieldset>
 
             <fieldset>
               <legend>Produto</legend>
-              <label htmlFor="tipo-produto">Tipo de solicitação</label>
               <select id="tipo-produto" value={tipoProduto} onChange={(e) => setTipoProduto(e.target.value)} required>
-                <option disabled value="">Selecione</option>
-                <option value="padrao">Produto existente (padrão)</option>
-                <option value="personalizar">Produto existente + personalização</option>
+                <option disabled value="">Tipo de solicitação</option>
+                <option value="padrao">Produto existente</option>
+                <option value="personalizar">Personalizar produto</option>
                 <option value="novo">Novo projeto</option>
               </select>
 
               {camposVisiveis.padrao && (
-                <div id="campos-padrao">
-                  <label>Linha de produto</label>
-                  <select
-                    id="linha-produto"
-                    onChange={(e) => {
-                      const linha = e.target.value;
-                      const produtoSelect = document.getElementById('produto-padrao');
-                      produtoSelect.innerHTML = '<option value="">Selecione o produto</option>';
-                      produtosPorLinha[linha]?.forEach(prod => {
-                        const opt = document.createElement('option');
-                        opt.value = prod;
-                        opt.textContent = prod;
-                        produtoSelect.appendChild(opt);
-                      });
-                    }}
-                  >
-                    <option value="">Selecione a linha</option>
-                    <option value="pet">Linha PET</option>
-                    <option value="residencial">Móveis residenciais</option>
-                    <option value="comercial">Expositores comerciais</option>
+                <div>
+                  <select id="linha-produto" onChange={(e) => {
+                    const linha = e.target.value;
+                    const produtoSelect = document.getElementById('produto-padrao');
+                    produtoSelect.innerHTML = '<option value="">Produto</option>';
+                    produtosPorLinha[linha]?.forEach(prod => {
+                      const opt = document.createElement('option');
+                      opt.value = prod;
+                      opt.textContent = prod;
+                      produtoSelect.appendChild(opt);
+                    });
+                  }}>
+                    <option value="">Linha de produto</option>
+                    <option value="pet">PET</option>
+                    <option value="residencial">Residencial</option>
+                    <option value="comercial">Comercial</option>
                     <option value="decoracao">Decoração</option>
                     <option value="utilidades">Utilidades</option>
                   </select>
-
-                  <label>Produto</label>
                   <select id="produto-padrao">
-                    <option value="">Selecione o produto</option>
+                    <option value="">Produto</option>
                   </select>
-                </div>
-              )}
-
-              {camposVisiveis.personalizar && (
-                <div id="campos-personalizar">
-                  <label>Produto base</label>
-                  <select id="produto-base">
-                    <option value="">Selecione o produto</option>
-                  </select>
-
-                  <label>Descreva a personalização</label>
-                  <textarea id="personalizacao"></textarea>
                 </div>
               )}
 
               {camposVisiveis.novo && (
-                <div id="campos-novo">
-                  <label>Imagem de referência (opcional)</label>
+                <div>
                   <input type="file" id="imagem-referencia" accept="image/*" />
-
-                  <label htmlFor="tipo-projeto">Tipo de projeto</label>
-                  <input type="text" id="tipo-projeto" />
-
-                  <label htmlFor="estrutura">Tipo de estrutura</label>
+                  <input type="text" id="tipo-projeto" placeholder="Tipo de projeto" />
                   <select id="estrutura">
                     <option value="madeira">Madeira</option>
                     <option value="metal">Metal</option>
                     <option value="ambos">Ambos</option>
                   </select>
-
-                  <label htmlFor="altura">Altura (cm)</label>
-                  <input type="number" id="altura" />
-
-                  <label htmlFor="largura">Largura (cm)</label>
-                  <input type="number" id="largura" />
-
-                  <label htmlFor="profundidade">Profundidade (cm)</label>
-                  <input type="number" id="profundidade" />
+                  <input type="number" id="altura" placeholder="Altura (cm)" />
+                  <input type="number" id="largura" placeholder="Largura (cm)" />
+                  <input type="number" id="profundidade" placeholder="Profundidade (cm)" />
                 </div>
               )}
             </fieldset>
 
             <div className="botoes">
               <button type="button" onClick={handleVisualizar}>Visualizar</button>
-              <button type="button" onClick={handleSalvarOrcamento}>Salvar Orçamento</button>
-              <button type="button" onClick={gerarPDF}>Gerar PDF</button>
-              <button type="button" onClick={gerarImagem}>Salvar como imagem</button>
-              <button type="button" onClick={enviarWhatsApp}>Enviar via WhatsApp</button>
+              <button type="button" onClick={handleSalvarOrcamento}>Salvar</button>
+              <button type="button" onClick={gerarImagem}>Imagem</button>
+              <button type="button" onClick={enviarWhatsApp}>WhatsApp</button>
             </div>
           </form>
 
           {resumo && (
             <div className="resumo-orcamento">
-              <h3>Resumo do Orçamento</h3>
-              <ul className="resumo-lista">
+              <h3>Resumo</h3>
+              <ul>
                 <li><strong>Nome:</strong> {resumo.nome}</li>
                 <li><strong>Email:</strong> {resumo.email}</li>
                 <li><strong>Telefone:</strong> {resumo.telefone}</li>
-                <li><strong>Tipo de solicitação:</strong> {resumo.tipoProduto}</li>
+                <li><strong>Tipo:</strong> {resumo.tipoProduto}</li>
                 <li><strong>Mensagem:</strong> {resumo.mensagem}</li>
                 {resumo.produto && <li><strong>Produto:</strong> {resumo.produto}</li>}
-                {resumo.tipoProjeto && <li><strong>Tipo de projeto:</strong> {resumo.tipoProjeto}</li>}
+                {resumo.tipoProjeto && <li><strong>Projeto:</strong> {resumo.tipoProjeto}</li>}
                 {resumo.estrutura && <li><strong>Estrutura:</strong> {resumo.estrutura}</li>}
                 {resumo.altura && <li><strong>Altura:</strong> {resumo.altura} cm</li>}
                 {resumo.largura && <li><strong>Largura:</strong> {resumo.largura} cm</li>}
                 {resumo.profundidade && <li><strong>Profundidade:</strong> {resumo.profundidade} cm</li>}
                 {resumo.preco && <li><strong>Valor:</strong> R$ {resumo.preco.toFixed(2)}</li>}
+                {resumo.imagemReferencia && (
+                  <li>
+                    <strong>Imagem:</strong><br />
+                    <img src={resumo.imagemReferencia} alt="Referência" style={{ maxWidth: '100%' }} />
+                  </li>
+                )}
               </ul>
             </div>
           )}

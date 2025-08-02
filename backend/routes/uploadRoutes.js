@@ -49,7 +49,7 @@ router.post('/:categoria', upload.single('imagem'), (req, res) => {
   const urlCompleta = `${req.protocol}://${req.get('host')}/imagens/${categoria}/${req.file.filename}`;
   console.log('✅ Upload concluído:', urlCompleta);
 
-  res.status(201).json({ imagem: urlCompleta });
+  res.status(201).json({ url: urlCompleta });
 });
 
 module.exports = router;

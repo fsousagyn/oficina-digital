@@ -2,29 +2,36 @@ const express = require('express');
 const mysql = require('mysql2');
 const cors = require('cors');
 const bcrypt = require('bcrypt');
+const path = require('path');
+const fs = require('fs');
+const multer = require('multer');
+
 const clientesRouter = require('./routes/clientes');
 const orcamentosRouter = require('./routes/orcamentos');
 const produtosRouter = require('./routes/produtosRoutes');
 const uploadRouter = require('./routes/uploadRoutes');
-const multer = require('multer');
-const path = require('path');
-const fs = require('fs');
 const criarAdminRouter = require('./routes/criarAdmin');
+const orcamentoAdminRoutes = require('./routes/orcamentoAdmin');
+
 const app = express();
-// Middlewares
+
+// 🛡️ Middlewares
 app.use(cors());
 app.use(express.json());
 app.use(express.static('public'));
 app.use(express.static(path.join(__dirname, 'public')));
-// Rotas
+
+// 📦 Rotas principais
 app.use('/api/clientes', clientesRouter);
 app.use('/api/orcamentos', orcamentosRouter);
 app.use('/api/produtos', produtosRouter);
 app.use('/api/upload', uploadRouter);
 app.use('/criar-admin', criarAdminRouter);
+app.use(orcamentoAdminRoutes); // rotas administrativas
+
 console.log('🚀 Iniciando servidor...');
 
-// Conexão com MySQL
+// 🔗 Conexão com MySQL
 const db = mysql.createConnection({
   host: 'localhost',
   user: 'root',
@@ -32,15 +39,12 @@ const db = mysql.createConnection({
   database: 'oficina_digital'
 });
 
-// Configuração do multer
+// 📤 Configuração do multer
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
     const tipo = req.params.tipo;
     const dir = path.join(__dirname, 'public', 'imagens', tipo);
-
-    // Garante que o diretório exista
     fs.mkdirSync(dir, { recursive: true });
-
     cb(null, dir);
   },
   filename: (req, file, cb) => {
@@ -51,18 +55,16 @@ const storage = multer.diskStorage({
 });
 const upload = multer({ storage });
 
-// Upload por categoria
+// 📤 Upload por categoria
 app.post('/upload/:tipo', upload.single('imagem'), (req, res) => {
   try {
     const tipo = req.params.tipo;
-
     if (!req.file) {
       console.warn('❌ Nenhum arquivo enviado');
       return res.status(400).json({ erro: 'Nenhum arquivo enviado' });
     }
     const url = `http://localhost:3001/imagens/${tipo}/${req.file.filename}`;
     console.log('✅ Upload concluído:', url);
-
     res.json({ url });
   } catch (error) {
     console.error('💥 Erro no upload:', error);
@@ -70,7 +72,7 @@ app.post('/upload/:tipo', upload.single('imagem'), (req, res) => {
   }
 });
 
-// Exclusão de imagem
+// 🗑️ Exclusão de imagem
 app.delete('/delete/:tipo/:filename', (req, res) => {
   const { tipo, filename } = req.params;
   const filePath = path.join(__dirname, 'public', 'imagens', tipo, filename);
@@ -84,7 +86,7 @@ app.delete('/delete/:tipo/:filename', (req, res) => {
   });
 });
 
-// Login com verificação segura
+// 🔐 Login com verificação segura
 app.post('/login', (req, res) => {
   const { email, senha } = req.body;
 
@@ -93,8 +95,8 @@ app.post('/login', (req, res) => {
     if (results.length === 0) return res.status(401).json({ erro: 'Usuário não encontrado' });
 
     const usuario = results[0];
-
     const senhaValida = await bcrypt.compare(senha, usuario.senha);
+
     if (senhaValida) {
       res.json({ sucesso: true, usuario });
     } else {
@@ -103,6 +105,7 @@ app.post('/login', (req, res) => {
   });
 });
 
+// 🚀 Inicialização do servidor
 app.listen(3001, () => {
   console.log('✅ Servidor rodando na porta 3001');
 });

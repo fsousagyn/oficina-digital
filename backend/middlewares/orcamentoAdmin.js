@@ -1,41 +1,11 @@
 const express = require('express');
 const router = express.Router();
 const db = require('../config/connection');
+const verificarAdmin = require('../middlewares/verificarAdmin');
+const validarAtualizacaoOrcamento = require('../middlewares/validarAtualizacaoOrcamento');
 
-// 💾 Salvar orçamento
-router.post('/', async (req, res) => {
-  const { cliente_email, tipo_solicitacao, mensagem, dados } = req.body;
-
-  // 🔍 Validação básica
-  if (
-    !cliente_email ||
-    !tipo_solicitacao ||
-    !dados ||
-    Object.prototype.toString.call(dados) !== '[object Object]'
-  ) {
-    return res.status(400).json({ erro: 'Dados incompletos ou inválidos' });
-  }
-
-  try {
-    const dadosFormatados = JSON.stringify(dados);
-
-    const [resultado] = await db.execute(
-      'INSERT INTO orcamentos (cliente_email, tipo_solicitacao, mensagem, dados) VALUES (?, ?, ?, ?)',
-      [cliente_email, tipo_solicitacao, mensagem || '', dadosFormatados]
-    );
-
-    res.status(201).json({
-      sucesso: true,
-      id: resultado.insertId
-    });
-  } catch (erro) {
-    console.error('Erro ao salvar orçamento:', erro);
-    res.status(500).json({ erro: 'Erro ao salvar orçamento' });
-  }
-});
-
-// 📄 Listar orçamentos (com filtro opcional por status)
-router.get('/', async (req, res) => {
+// 📄 Listar orçamentos com filtro opcional por status
+router.get('/admin/orcamentos', verificarAdmin, async (req, res) => {
   const { status } = req.query;
   const query = status
     ? 'SELECT * FROM orcamentos WHERE status = ?'
@@ -68,18 +38,14 @@ router.get('/', async (req, res) => {
 
     res.json(orcamentos);
   } catch (erro) {
-    console.error('Erro ao buscar orçamentos:', erro);
+    console.error('Erro ao buscar orçamentos (admin):', erro);
     res.status(500).json({ erro: 'Erro ao buscar orçamentos' });
   }
 });
 
-// ✏️ Atualizar orçamento (status e valor)
-router.put('/:id', async (req, res) => {
+// ✏️ Atualizar orçamento (status e valor estimado)
+router.put('/admin/orcamentos/:id', verificarAdmin, validarAtualizacaoOrcamento, async (req, res) => {
   const { status, valor_estimado } = req.body;
-
-  if (!status || typeof valor_estimado !== 'number') {
-    return res.status(400).json({ erro: 'Dados inválidos' });
-  }
 
   try {
     await db.execute(
@@ -88,7 +54,7 @@ router.put('/:id', async (req, res) => {
     );
     res.json({ sucesso: true });
   } catch (erro) {
-    console.error('Erro ao atualizar orçamento:', erro);
+    console.error('Erro ao atualizar orçamento (admin):', erro);
     res.status(500).json({ erro: 'Erro ao atualizar orçamento' });
   }
 });
