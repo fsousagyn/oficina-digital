@@ -115,35 +115,55 @@ function ComoComprar() {
   };
 
   const handleSalvarOrcamento = async () => {
-    if (!validarFormulario()) return;
+  if (!validarFormulario()) return;
 
-    const tipo_solicitacao = tipoProduto;
-    const mensagemTexto = document.getElementById('mensagem')?.value || '';
+  // Redireciona para loja virtual se for produto padrão
+  if (tipoProduto === 'padrao') {
+    window.location.href = 'https://loja.infinitepay.io/efcriativa';
+    return;
+  }
 
-    const dados = {
-      produto: document.getElementById('produto-padrao')?.value || '',
-      tipoProjeto: document.getElementById('tipo-projeto')?.value || '',
-      estrutura: document.getElementById('estrutura')?.value || '',
-      altura: document.getElementById('altura')?.value || '',
-      largura: document.getElementById('largura')?.value || '',
-      profundidade: document.getElementById('profundidade')?.value || '',
-    };
+  const tipo_solicitacao = tipoProduto;
+  const mensagemTexto = document.getElementById('mensagem')?.value || '';
+  const tipo_personalizacao = tipoProduto === 'personalizar' ? 'customização simples' : null;
+  const produto_id = null; // pode ser integrado com produtos do banco futuramente
 
-    const imagemUrl = await handleUploadImagem();
-    if (imagemUrl) dados.imagemReferencia = imagemUrl;
-
-    try {
-      await axios.post('/api/orcamentos', {
-        cliente_email: cliente.email,
-        tipo_solicitacao,
-        mensagem: mensagemTexto,
-        dados,
-      });
-      alert('Orçamento salvo com sucesso!');
-    } catch (erro) {
-      alert('Erro ao salvar orçamento.');
-    }
+  const dados = {
+    produto: document.getElementById('produto-padrao')?.value || '',
+    tipoProjeto: document.getElementById('tipo-projeto')?.value || '',
+    estrutura: document.getElementById('estrutura')?.value || '',
+    altura: document.getElementById('altura')?.value || '',
+    largura: document.getElementById('largura')?.value || '',
+    profundidade: document.getElementById('profundidade')?.value || '',
   };
+
+  const imagemUrl = await handleUploadImagem();
+  if (imagemUrl) {
+    dados.imagemReferencia = imagemUrl;
+  }
+
+  const formData = new FormData();
+  formData.append('cliente_email', cliente.email);
+  formData.append('tipo_solicitacao', tipo_solicitacao);
+  formData.append('mensagem', mensagemTexto);
+  formData.append('dados', JSON.stringify(dados));
+  formData.append('tipo_personalizacao', tipo_personalizacao);
+  formData.append('produto_id', produto_id);
+
+  const file = document.getElementById('imagem-referencia')?.files?.[0];
+  if (file) {
+    formData.append('imagem', file);
+  }
+
+  try {
+    const resposta = await axios.post('/api/orcamentos', formData);
+    alert('Orçamento salvo com sucesso! ID: ' + resposta.data.id);
+  } catch (erro) {
+    console.error('Erro ao salvar orçamento:', erro);
+    alert('Erro ao salvar orçamento.');
+  }
+};
+
   const handleVisualizar = () => {
     if (!validarFormulario()) return;
 
@@ -234,10 +254,13 @@ function ComoComprar() {
             <fieldset>
               <legend>Produto</legend>
               <select id="tipo-produto" value={tipoProduto} onChange={(e) => setTipoProduto(e.target.value)} required>
-                <option disabled value="">Tipo de solicitação</option>
-                <option value="padrao">Produto existente</option>
-                <option value="personalizar">Personalizar produto</option>
-                <option value="novo">Novo projeto</option>
+                {cliente && (
+                      <>
+                        <option value="personalizar">Personalizar produto</option>
+                        <option value="novo">Novo projeto</option>
+                      </>
+                    )}
+                    {!cliente && <option value="padrao">Produto existente</option>}
               </select>
 
               {camposVisiveis.padrao && (
