@@ -11,12 +11,11 @@ const path = require('path');
 const fs = require('fs');
 const criarAdminRouter = require('./routes/criarAdmin');
 const app = express();
-
 // Middlewares
 app.use(cors());
 app.use(express.json());
 app.use(express.static('public'));
-
+app.use(express.static(path.join(__dirname, 'public')));
 // Rotas
 app.use('/api/clientes', clientesRouter);
 app.use('/api/orcamentos', orcamentosRouter);
@@ -61,8 +60,7 @@ app.post('/upload/:tipo', upload.single('imagem'), (req, res) => {
       console.warn('❌ Nenhum arquivo enviado');
       return res.status(400).json({ erro: 'Nenhum arquivo enviado' });
     }
-
-    const url = `/imagens/${tipo}/${req.file.filename}`;
+    const url = `http://localhost:3001/imagens/${tipo}/${req.file.filename}`;
     console.log('✅ Upload concluído:', url);
 
     res.json({ url });

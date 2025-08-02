@@ -1,16 +1,20 @@
 const jwt = require('jsonwebtoken');
-const chaveSecreta = 'sua_chave_secreta_aqui'; // ideal guardar em .env
+require('dotenv').config(); // para usar variáveis do .env
+
+const chaveSecreta = process.env.JWT_SECRET || 'fallback_secreta';
 
 function verificarToken(req, res, next) {
-  const token = req.headers.authorization?.split(' ')[1];
+  const authHeader = req.headers.authorization;
 
-  if (!token) {
-    return res.status(401).json({ erro: 'Token não fornecido' });
+  if (!authHeader || !authHeader.startsWith('Bearer ')) {
+    return res.status(401).json({ erro: 'Token não fornecido ou mal formatado' });
   }
+
+  const token = authHeader.split(' ')[1];
 
   try {
     const usuario = jwt.verify(token, chaveSecreta);
-    req.usuario = usuario; // coloca dados decodificados na requisição
+    req.usuario = usuario; // adiciona os dados do usuário à requisição
     next();
   } catch (err) {
     return res.status(403).json({ erro: 'Token inválido ou expirado' });
